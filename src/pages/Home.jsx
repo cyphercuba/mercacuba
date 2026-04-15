@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShieldCheck, Truck, Clock, Lock, MessageCircle, Tag, DollarSign, ChevronDown, ChevronRight } from 'lucide-react';
+import { ShieldCheck, Truck, Clock, Lock, MessageCircle, ChevronDown, ChevronRight } from 'lucide-react';
 
 const categoryTree = [
   { id: 'despensa', name: '🥫 Despensa', children: ['Conservas', 'Aceites y salsas', 'Café e infusiones', 'Granos y legumbres', 'Galletas', 'Panadería', 'Confituras'] },
@@ -24,21 +24,6 @@ const categoryTree = [
   { id: 'moda-accesorios', name: '👕 Moda y Accesorios', children: ['Ropa', 'Accesorios'] },
   { id: 'bebe', name: '👶 Bebé', children: ['Productos para bebé'] },
   { id: 'otros', name: '📦 Otros', children: ['Otros productos', 'Congelados y refrigerados'] },
-];
-
-const priceRanges = [
-  'Menos de US$25',
-  'US$25 a US$50',
-  'US$50 a US$100',
-  'US$100 a US$250',
-  'Más de US$250',
-];
-
-const discountOptions = [
-  'Ofertas del día',
-  'Combos con descuento',
-  'Entrega rápida',
-  'Mayorista',
 ];
 
 const featuredLinks = [
@@ -70,8 +55,8 @@ const Home = () => {
 
   return (
     <div>
-      <div className="home-market-layout" style={{ display: 'grid', gridTemplateColumns: '290px minmax(0, 1fr)', gap: '1.5rem', alignItems: 'start' }}>
-        <aside className="home-categories-sidebar" style={{ display: 'grid', gap: '1rem', position: 'sticky', top: '96px' }}>
+      <div className="home-market-layout" style={{ display: 'grid', gridTemplateColumns: '290px minmax(0, 1fr)', gap: '1.2rem', alignItems: 'start' }}>
+        <aside className="home-categories-sidebar" style={{ display: 'grid', gap: '1rem', position: 'sticky', top: '56px' }}>
           <div style={filterCardStyle}>
             <div style={{ backgroundColor: '#0b2e59', color: 'white', padding: '1rem 1.1rem', fontWeight: 800, fontSize: '1rem' }}>
               Categorías
@@ -108,33 +93,6 @@ const Home = () => {
             </div>
           </div>
 
-          <div style={filterCardStyle}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '1rem 1.1rem', borderBottom: '1px solid #f1f5f9', fontWeight: 800, color: '#0f172a' }}>
-              <DollarSign size={18} /> Precio
-            </div>
-            <div style={{ padding: '0.5rem 1.1rem 0.9rem' }}>
-              {priceRanges.map((range) => (
-                <label key={range} style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', padding: '0.45rem 0', fontSize: '0.92rem', color: '#334155', cursor: 'pointer' }}>
-                  <input type="checkbox" style={{ accentColor: '#0b2e59' }} />
-                  {range}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div style={filterCardStyle}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '1rem 1.1rem', borderBottom: '1px solid #f1f5f9', fontWeight: 800, color: '#0f172a' }}>
-              <Tag size={18} /> Ofertas y descuentos
-            </div>
-            <div style={{ padding: '0.5rem 1.1rem 0.9rem' }}>
-              {discountOptions.map((option) => (
-                <label key={option} style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', padding: '0.45rem 0', fontSize: '0.92rem', color: '#334155', cursor: 'pointer' }}>
-                  <input type="checkbox" style={{ accentColor: '#0b2e59' }} />
-                  {option}
-                </label>
-              ))}
-            </div>
-          </div>
         </aside>
 
         <div>
