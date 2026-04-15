@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { User, Lock, Mail, Phone, ChevronLeft, LogOut, MapPin, Package } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { loginUser, registerUser } from '../lib/auth';
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
   const { user, setUser, signOut } = useAuth();
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [form, setForm] = useState({
     firstName: '',
@@ -51,7 +52,10 @@ const Login = () => {
       } else {
         if (isLogin) {
           if (result.user) setUser(result.user);
-          setMessage('Sesión iniciada correctamente.');
+          setMessage('Sesión iniciada correctamente. Redirigiendo...');
+          setTimeout(() => {
+            navigate('/');
+          }, 900);
         } else {
           setMessage('Cuenta creada correctamente. Redirigiendo al inicio de sesión...');
           setForm({ firstName: '', lastName: '', email: form.email, phone: '', password: '' });
@@ -72,6 +76,7 @@ const Login = () => {
     await signOut();
     setMessage('Sesión cerrada correctamente.');
     setError('');
+    navigate('/');
   };
 
   return (
