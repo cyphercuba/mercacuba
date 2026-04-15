@@ -1,0 +1,43 @@
+Fase 2: MercaCuba RD - De Plataforma Visual a E-Commerce Funcional
+Hemos completado exitosamente la Fase 1 del proyecto (Identidad Visual y Prototipo). El diseño "Tech Luxury", la reestructuración de tu logo corporativo, los componentes superpuestos (como el mapa) y la navegación multinivel están funcionando a la perfección.
+
+Ahora que el sitio se ve increíblemente profesional e institucional, me has pedido que revise qué falta o qué corregiría. Mi evaluación es que la plataforma es actualmente una maqueta vacía en términos de motor. Todo lo que ves es código "duro" en el Frontend.
+
+Aquí te presento lo que veo que debemos corregir/completar urgentemente para lanzar el proyecto:
+
+1. Conexión de Base de Datos y Backend (Lo más importante) ⚠️
+IMPORTANT
+
+El gran problema: Actualmente, todos los productos, combos y categorías están escritos manualmente dentro de un archivo de código (mockData.js). Esto significa que si quieres cambiar el precio del pollo o agregar un combo nuevo mañana, tendrás que pedirme que cambie el código fuente y lo re-despliegue.
+
+Corrección Propuesta:
+
+Integrar Firebase (Firestore): Conectar la aplicación a una base de datos real.
+Gestión dinámica: Subiremos todos tus productos a Firebase. De esta manera, podrás usar un Panel de Administración en el futuro para editar precios o stock sin tocar el código de la web.
+2. Autenticación Real de Usuarios 🔐
+WARNING
+
+El problema: La página de Iniciar Sesión y Registro que acabamos de poner hermosa no hace nada. Si alguien hace clic en "Completar Registro", no se guarda su información en ningún lado.
+
+Corrección Propuesta:
+
+Firebase Auth: Conectaremos esos formularios al sistema de seguridad de Google.
+Perfiles: Cuando un de la diáspora cubana en USA o RD cree su cuenta, su información se guardará. Al volver a entrar, verán su "Dirección en Cuba" guardada y el historial de paquetes que ya te han comprado.
+3. Completar Páginas "Huérfanas" 📄
+Página "Encargos": Ahora mismo está vacía. Debemos diseñar un formulario sofisticado donde el cliente pueda describir exactamente qué caja o equipo específico (que no esté en el catálogo) necesita enviar por barco/avión.
+Página "Compra Mayorista / MIPYMES": Necesita un formulario especial para capturar Leads B2B (MIPYMES) con requerimientos de volumen, con conexión directa a tu WhatsApp corporativo o correo.
+Páginas "Ofertas" y "Combos": Agregar carruseles dinámicos que llamen la atención visualmente.
+4. Evolución del Checkout (Pasarela de Pago) 💳
+NOTE
+
+Estado Actual: El carrito de compras actualmente toma las órdenes y abre directamente la aplicación de WhatsApp de la persona con un texto pre-escrito. Esta es una excelente solución de Fase 1 para no gastar en comisiones de pasarelas de pago.
+
+Mi Agregado (Propuesta): Si quieres mantener los pagos vía WhatsApp/Zelle, agregaría la generación de un Número de Orden. Es decir, antes de mandarte al WhatsApp, la plataforma guarda la orden en tu Base de Datos como "Pendiente" y le da al cliente un ticket (Ej: ORD-9482). Esto le dará una presencia extremadamente seria a tu negocio.
+
+Plan de Ejecución (Siguientes Pasos)
+Si estás de acuerdo con mi visión técnica, el orden de trabajo inmediato será:
+
+Configurar Firebase: Necesitaré crear el entorno de base de datos e implementar el sistema de Login real.
+Migrar el Catálogo: Pasar todos los productos estáticos a la base de datos real.
+Completar Páginas: Terminar el diseño visual de "Encargos" y "Mayoristas".
+¿Tienes ya una cuenta de Google/Firebase lista para el proyecto, o procedo a crear la estructura lógica de los datos por mientras? ¿Estás de acuerdo con entrar en esta Fase de programación real?

@@ -1,0 +1,20 @@
+[/] 1. Configuración de Firebase
+
+[x] Instalar dependencias de Firebase en el proyecto
+[ ] Solicitar y configurar las credenciales de Firebase del usuario
+[x] Crear la estructura base firebase.js
+[ ] 2. Autenticación (Auth)
+
+[ ] Implementar AuthContext.jsx para el estado global del usuario
+[ ] Conectar Login.jsx a signInWithEmailAndPassword y createUserWithEmailAndPassword
+[ ] Reflejar el estado de autenticación en la Navbar y el Sidebar (cerrar sesión, nombre de usuario)
+[ ] 3. Base de Datos (Catálogo y Órdenes)
+
+[ ] Migrar datos de prueba (mockData.js) a colecciones de Firestore
+[ ] Refactorizar componentes para leer productos dinámicamente (Catalog.jsx, Combos.jsx)
+[ ] Mejorar Checkout.jsx para guardar la orden en Firestore y generar un Ticket ID
+[ ] 4. Completar Páginas Funcionales
+
+[ ] Diseñar formulario B2B en CompraMayorista.jsx
+[ ] Diseñar formulario avanzado en Encargos.jsx
+[ ] Mejorar el carrusel y diseño vacío de Ofertas.jsx
