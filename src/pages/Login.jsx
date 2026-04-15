@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { User, Lock, Mail, Phone, ChevronLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { loginUser, registerUser } from '../lib/auth';
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
+  const { setUser } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [form, setForm] = useState({
     firstName: '',
@@ -48,6 +50,7 @@ const Login = () => {
         setError(result.error || 'Ocurrió un error.');
       } else {
         if (isLogin) {
+          if (result.user) setUser(result.user);
           setMessage('Sesión iniciada correctamente.');
         } else {
           setMessage('Cuenta creada correctamente. Redirigiendo al inicio de sesión...');

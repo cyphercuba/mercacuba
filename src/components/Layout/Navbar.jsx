@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart, Search, User, HelpCircle, Menu, X } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
 
 const Navbar = () => {
   const { state } = useCart();
+  const { user } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
@@ -73,7 +75,7 @@ const Navbar = () => {
             
             <Link to="/cuenta" className="hidden-mobile flex items-center gap-2 btn-nav" style={{ color: 'var(--color-text-main)', transition: 'color 0.2s' }}>
               <User size={18} />
-              <span>Iniciar Sesión</span>
+              <span>{user ? user.firstName || user.email : 'Iniciar Sesión'}</span>
             </Link>
 
             <button className="mobile-only" style={{ color: 'var(--color-text-main)', cursor: 'pointer' }} onClick={() => setIsMobileMenuOpen(true)}>
@@ -164,7 +166,7 @@ const Navbar = () => {
         </div>
         <div className="mobile-drawer-content" style={{ display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
           <Link to="/ayuda" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 nav-link" style={{ fontSize: '1.1rem', color: 'var(--color-text-main)' }}><HelpCircle size={20} /> Ayuda</Link>
-          <Link to="/cuenta" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 nav-link" style={{ fontSize: '1.1rem', color: 'var(--color-text-main)' }}><User size={20} /> Iniciar Sesión</Link>
+          <Link to="/cuenta" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 nav-link" style={{ fontSize: '1.1rem', color: 'var(--color-text-main)' }}><User size={20} /> {user ? user.firstName || user.email : 'Iniciar Sesión'}</Link>
           <div style={{ height: '1px', backgroundColor: 'var(--color-border)', margin: 'var(--spacing-2) 0' }}></div>
           <Link to="/catalogo" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 nav-link" style={{ fontSize: '1.1rem', color: 'var(--color-text-main)' }}>Todas las categorías</Link>
           <Link to="/combos" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 nav-link" style={{ fontSize: '1.1rem', color: 'var(--color-text-main)' }}>Combos</Link>
