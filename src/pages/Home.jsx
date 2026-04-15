@@ -3,6 +3,17 @@ import { Link } from 'react-router-dom';
 import { Truck, MessageCircle, Tag, DollarSign, ChevronDown, ChevronRight, ShieldCheck, Clock, Lock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
+const publicCatalogCats = [
+  { id: 'alimentos', name: 'Alimentos', image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=200&h=200&q=80' },
+  { id: 'bebidas', name: 'Bebidas', image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=200&h=200&q=80' },
+  { id: 'aseo-e-higiene', name: 'Higiene', image: '/hygiene_combo.png' },
+  { id: 'ferreteria', name: 'Construcción', image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=200&h=200&q=80' },
+  { id: 'electrodomesticos', name: 'Electrodomésticos', image: 'https://images.unsplash.com/photo-1626806787426-5910811b6325?auto=format&fit=crop&w=200&h=200&q=80' },
+  { id: 'articulos-del-hogar', name: 'Hogar', image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=200&h=200&q=80' },
+  { id: 'mayorista', name: 'Venta Mayorista', image: '/wholesale_pallet.png' },
+  { id: 'otros', name: 'Más', image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=200&h=200&q=80' },
+];
+
 const categoryTree = [
   { id: 'despensa', name: '🥫 Despensa', children: ['Conservas', 'Aceites y salsas', 'Café e infusiones', 'Granos y legumbres', 'Galletas', 'Panadería', 'Confituras'] },
   { id: 'huevos-lacteos', name: '🥚 Huevos y Lácteos', children: ['Huevos', 'Lácteos'] },
@@ -86,6 +97,26 @@ const PublicHome = () => (
       </div>
     </section>
 
+    <section style={{ marginBottom: 'var(--spacing-10)' }}>
+      <div className="flex justify-between items-center" style={{ marginBottom: 'var(--spacing-4)' }}>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 700 }}>Explora por categorías</h2>
+        <Link to="/catalogo" style={{ fontSize: '0.875rem', color: 'var(--color-brand-blue)', fontWeight: 600 }}>
+          Ver catálogo
+        </Link>
+      </div>
+
+      <div className="grid grid-cols-4 md:grid-cols-8 gap-4 categories-grid-mobile">
+        {publicCatalogCats.map((cat) => (
+          <Link key={cat.id} to={`/catalogo?cat=${cat.id}`} className="flex flex-col items-center gap-2 category-item-mobile" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <div className="category-img-container" style={{ padding: '4px', border: '1px solid var(--color-border)', width: '100%', aspectRatio: '1/1', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'transform 0.2s', cursor: 'pointer', overflow: 'hidden' }}>
+              <img src={cat.image} alt={cat.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+            </div>
+            <span style={{ fontSize: '0.75rem', fontWeight: 600, textAlign: 'center', color: 'var(--color-primary)' }}>{cat.name}</span>
+          </Link>
+        ))}
+      </div>
+    </section>
+
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4" style={{ marginBottom: 'var(--spacing-8)' }}>
       <div style={{ backgroundColor: '#1e3050', color: 'white', padding: 'var(--spacing-4)', borderRadius: 'var(--border-radius)', display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)' }}>
         <Truck size={24} color="#4ade80" />
@@ -119,7 +150,7 @@ const AuthenticatedHome = () => {
   };
 
   return (
-    <div className="home-market-layout" style={{ display: 'grid', gridTemplateColumns: '290px minmax(0, 1fr)', gap: '1.2rem', alignItems: 'start' }}>
+    <div className="home-market-layout" style={{ display: 'grid', gridTemplateColumns: '270px minmax(0, 1fr)', gap: '0.9rem', alignItems: 'start' }}>
       <aside className="home-categories-sidebar" style={{ display: 'grid', gap: '1rem', position: 'sticky', top: '56px' }}>
         <div style={filterCardStyle}>
           <div style={{ backgroundColor: '#0b2e59', color: 'white', padding: '1rem 1.1rem', fontWeight: 800, fontSize: '1rem' }}>Categorías</div>
