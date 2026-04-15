@@ -1,12 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Package, MapPin, MessageCircle, ChevronRight, Clock, CheckCircle } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 const Sidebar = () => {
+  const { user } = useAuth();
+
+  if (user) {
+    return null;
+  }
+
   return (
     <aside className="sidebar-right">
-      
-      {/* Mi Cuenta / Iniciar Sesión */}
       <div className="card" style={{ padding: 'var(--spacing-4)' }}>
         <div className="flex justify-between items-center" style={{ marginBottom: 'var(--spacing-4)' }}>
           <h3 style={{ fontSize: '1rem', fontWeight: 600 }}>Mi Cuenta</h3>
@@ -25,7 +30,6 @@ const Sidebar = () => {
         </div>
       </div>
 
-      {/* Dirección Principal */}
       <div className="card" style={{ padding: 'var(--spacing-4)' }}>
         <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: 'var(--spacing-3)' }}>Dirección principal</h3>
         <div style={{ backgroundColor: 'var(--color-background)', padding: 'var(--spacing-3)', borderRadius: 'var(--border-radius)' }}>
@@ -38,7 +42,6 @@ const Sidebar = () => {
         </div>
       </div>
 
-      {/* Métodos de Pago */}
       <div className="card" style={{ padding: 'var(--spacing-4)' }}>
         <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: 'var(--spacing-3)' }}>Métodos de pago</h3>
         <div className="flex flex-col gap-2">
@@ -61,7 +64,6 @@ const Sidebar = () => {
         </div>
       </div>
 
-      {/* Atención al cliente */}
       <div className="card" style={{ padding: 'var(--spacing-4)', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0' }}>
         <div className="flex items-center gap-2" style={{ marginBottom: 'var(--spacing-2)' }}>
           <MessageCircle size={20} color="var(--color-brand-blue)" />
@@ -72,7 +74,6 @@ const Sidebar = () => {
           Soporte
         </button>
       </div>
-
     </aside>
   );
 };

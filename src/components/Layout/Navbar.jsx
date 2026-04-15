@@ -93,7 +93,7 @@ const Navbar = () => {
             </Link>
             
             {user ? (
-              <div className="hidden-mobile" ref={userMenuRef} style={{ position: 'relative' }}>
+              <div className="hidden-mobile" ref={userMenuRef} style={{ position: 'relative' }} onMouseEnter={() => setIsUserMenuOpen(true)} onMouseLeave={() => setIsUserMenuOpen(false)}>
                 <button type="button" onClick={() => setIsUserMenuOpen((prev) => !prev)} style={{ color: 'var(--color-text-main)', transition: 'color 0.2s', display: 'flex', alignItems: 'center', gap: '8px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.875rem', fontWeight: 500 }}>
                   <User size={18} />
                   <span>{user.firstName || user.email}</span>
