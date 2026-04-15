@@ -93,13 +93,13 @@ const Navbar = () => {
             </Link>
             
             {user ? (
-              <div className="hidden-mobile" ref={userMenuRef} style={{ position: 'relative' }} onMouseEnter={() => setIsUserMenuOpen(true)} onMouseLeave={() => setIsUserMenuOpen(false)}>
+              <div className="hidden-mobile" ref={userMenuRef} style={{ position: 'relative', paddingBottom: '14px', marginBottom: '-14px' }} onMouseEnter={() => setIsUserMenuOpen(true)} onMouseLeave={() => setIsUserMenuOpen(false)}>
                 <button type="button" onClick={() => setIsUserMenuOpen((prev) => !prev)} style={{ color: 'var(--color-text-main)', transition: 'color 0.2s', display: 'flex', alignItems: 'center', gap: '8px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.875rem', fontWeight: 500 }}>
                   <User size={18} />
                   <span>{user.firstName || user.email}</span>
                 </button>
                 {isUserMenuOpen && (
-                  <div style={{ position: 'absolute', top: 'calc(100% + 10px)', right: 0, width: '220px', backgroundColor: 'white', border: '1px solid #e2e8f0', borderRadius: '12px', boxShadow: '0 20px 40px rgba(15, 23, 42, 0.12)', padding: '0.6rem', zIndex: 60 }}>
+                  <div style={{ position: 'absolute', top: 'calc(100% + 2px)', right: 0, width: '220px', backgroundColor: 'white', border: '1px solid #e2e8f0', borderRadius: '12px', boxShadow: '0 20px 40px rgba(15, 23, 42, 0.12)', padding: '0.6rem', zIndex: 60 }}>
                     <Link to="/mi-cuenta" onClick={() => setIsUserMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '0.8rem', borderRadius: '10px', color: '#0f172a', textDecoration: 'none' }}>
                       <User size={18} /> Mi cuenta
                     </Link>
