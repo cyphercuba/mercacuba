@@ -50,7 +50,7 @@ const filterCardStyle = {
 };
 
 const PublicHome = () => (
-  <div>
+  <div style={{ width: '100%' }}>
     <section style={{ position: 'relative', backgroundColor: 'var(--color-brand-blue)', color: 'white', borderRadius: 'var(--border-radius-lg)', overflow: 'hidden', marginBottom: 'var(--spacing-6)' }}>
       <div className="hidden-mobile" style={{ position: 'absolute', top: 0, right: 0, bottom: 0, width: '55%', zIndex: 0, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', overflow: 'hidden' }}>
         <img src="/dr_cuba_map.png" alt="Dominican Republic to Cuba" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.9, mixBlendMode: 'screen' }} />
@@ -58,12 +58,12 @@ const PublicHome = () => (
 
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(90deg, rgba(9,46,92,1) 45%, rgba(9,46,92,0) 100%)', zIndex: 0 }}></div>
 
-      <div className="hero-container" style={{ position: 'relative', zIndex: 1, padding: 'var(--spacing-10) var(--spacing-8)' }}>
-        <h1 className="hero-title" style={{ fontSize: '2.4rem', fontWeight: 800, lineHeight: 1.15, marginBottom: 'var(--spacing-4)', maxWidth: '520px' }}>
+      <div className="hero-container" style={{ position: 'relative', zIndex: 1, padding: 'var(--spacing-12) var(--spacing-8)' }}>
+        <h1 className="hero-title" style={{ fontSize: '2.5rem', fontWeight: 800, lineHeight: 1.2, marginBottom: 'var(--spacing-4)', maxWidth: '520px' }}>
           Compra en República Dominicana <br />
           <span style={{ color: 'var(--color-accent)' }}>para tu familia en Cuba</span>
         </h1>
-        <p className="hero-desc" style={{ fontSize: '1.05rem', maxWidth: '460px', marginBottom: 'var(--spacing-7)', opacity: 0.9 }}>
+        <p className="hero-desc" style={{ fontSize: '1.1rem', maxWidth: '460px', marginBottom: 'var(--spacing-8)', opacity: 0.9 }}>
           Nosotros compramos, consolidamos y entregamos con amor.
         </p>
 
