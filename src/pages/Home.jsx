@@ -1,21 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShieldCheck, Truck, Clock, Lock, MessageCircle, Tag, DollarSign } from 'lucide-react';
+import { ShieldCheck, Truck, Clock, Lock, MessageCircle, Tag, DollarSign, ChevronDown, ChevronRight } from 'lucide-react';
 
-const categoryGroups = [
-  {
-    title: 'Categorías',
-    items: [
-      { id: 'alimentos', name: 'Alimentos' },
-      { id: 'bebidas', name: 'Bebidas' },
-      { id: 'aseo-e-higiene', name: 'Aseo e Higiene' },
-      { id: 'electrodomesticos', name: 'Electrodomésticos' },
-      { id: 'ferreteria', name: 'Ferretería' },
-      { id: 'articulos-del-hogar', name: 'Artículos del Hogar' },
-      { id: 'telefonos-celulares', name: 'Teléfonos Celulares' },
-      { id: 'otros', name: 'Otros' },
-    ],
-  },
+const categoryTree = [
+  { id: 'despensa', name: '🥫 Despensa', children: ['Conservas', 'Aceites y salsas', 'Café e infusiones', 'Granos y legumbres', 'Galletas', 'Panadería', 'Confituras'] },
+  { id: 'huevos-lacteos', name: '🥚 Huevos y Lácteos', children: ['Huevos', 'Lácteos'] },
+  { id: 'carnicos', name: '🥩 Cárnicos', children: ['Carne de res', 'Cerdo', 'Pollo', 'Cordero (Carnero)', 'Embutidos', 'Cárnicos varios'] },
+  { id: 'dulces-helados', name: '🍰 Dulces y Helados', children: ['Cakes y tartas', 'Helados', 'Dulces caseros'] },
+  { id: 'aseo-cuidado', name: '🧴 Aseo y Cuidado Personal', children: ['Productos de aseo', 'Perfumes'] },
+  { id: 'cenas-bufets', name: '🍽️ Cenas y Bufets', children: ['Comidas preparadas', 'Catering / Bufet'] },
+  { id: 'electrodomesticos', name: '🔌 Electrodomésticos', children: ['Cocina', 'Refrigeración', 'Lavado', 'Pequeños electrodomésticos'] },
+  { id: 'pescados-mariscos', name: '🐟 Pescados y Mariscos', children: ['Pescados', 'Mariscos'] },
+  { id: 'bebidas', name: '🥤 Bebidas', children: ['Refrescos', 'Jugos', 'Bebidas alcohólicas', 'Agua'] },
+  { id: 'de-agro', name: '🌾 De Agro', children: ['Viandas', 'Vegetales', 'Frutas'] },
+  { id: 'farmacia', name: '💊 Farmacia', children: ['Medicamentos', 'Vitaminas', 'Productos médicos'] },
+  { id: 'ferreteria', name: '🔧 Ferretería', children: ['Herramientas', 'Materiales de construcción'] },
+  { id: 'preelaborados', name: '🍕 Alimentos Preelaborados', children: ['Pizzas', 'Comida rápida', 'Congelados'] },
+  { id: 'limpieza-utiles', name: '🧼 Limpieza y Útiles', children: ['Productos de limpieza', 'Utensilios del hogar'] },
+  { id: 'regalos', name: '🎁 Regalos', children: ['Regalos para hombre', 'Regalos para mujer', 'Regalos para niños/as', 'Flores'] },
+  { id: 'piezas-accesorios', name: '🛠️ Piezas y Accesorios', children: ['Repuestos', 'Accesorios varios'] },
+  { id: 'hogar-mobiliario', name: '🛋️ Hogar y Mobiliario', children: ['Muebles', 'Decoración'] },
+  { id: 'infantiles-escolares', name: '🎒 Infantiles y Escolares', children: ['Útiles escolares', 'Productos infantiles'] },
+  { id: 'moda-accesorios', name: '👕 Moda y Accesorios', children: ['Ropa', 'Accesorios'] },
+  { id: 'bebe', name: '👶 Bebé', children: ['Productos para bebé'] },
+  { id: 'otros', name: '📦 Otros', children: ['Otros productos', 'Congelados y refrigerados'] },
 ];
 
 const priceRanges = [
@@ -48,6 +56,18 @@ const filterCardStyle = {
 };
 
 const Home = () => {
+  const [openCategories, setOpenCategories] = useState({
+    despensa: true,
+    'huevos-lacteos': true,
+    carnicos: true,
+    'dulces-helados': false,
+    'aseo-cuidado': false,
+  });
+
+  const toggleCategory = (id) => {
+    setOpenCategories((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
   return (
     <div>
       <div className="home-market-layout" style={{ display: 'grid', gridTemplateColumns: '290px minmax(0, 1fr)', gap: '1.5rem', alignItems: 'start' }}>
@@ -56,22 +76,35 @@ const Home = () => {
             <div style={{ backgroundColor: '#0b2e59', color: 'white', padding: '1rem 1.1rem', fontWeight: 800, fontSize: '1rem' }}>
               Categorías
             </div>
-            <div style={{ padding: '0.35rem 0' }}>
-              {categoryGroups[0].items.map((cat) => (
-                <Link
-                  key={cat.id}
-                  to={`/catalogo?cat=${cat.id}`}
-                  style={{ display: 'block', padding: '0.82rem 1.1rem', color: '#0f172a', textDecoration: 'none', fontSize: '0.95rem', borderBottom: '1px solid #f1f5f9' }}
-                >
-                  {cat.name}
-                </Link>
-              ))}
-              <Link
-                to="/catalogo"
-                style={{ display: 'block', padding: '0.9rem 1.1rem', color: '#0b2e59', textDecoration: 'none', fontSize: '0.95rem', fontWeight: 800, backgroundColor: '#f8fafc' }}
-              >
-                Ver todas las categorías
-              </Link>
+            <div style={{ padding: '0.35rem 0', maxHeight: '620px', overflowY: 'auto' }}>
+              {categoryTree.map((cat) => {
+                const isOpen = !!openCategories[cat.id];
+                return (
+                  <div key={cat.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                    <button
+                      type="button"
+                      onClick={() => toggleCategory(cat.id)}
+                      style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', padding: '0.82rem 1.1rem', color: '#0f172a', background: 'none', border: 'none', fontSize: '0.95rem', cursor: 'pointer', textAlign: 'left' }}
+                    >
+                      <span>{cat.name}</span>
+                      {isOpen ? <ChevronDown size={16} color="#64748b" /> : <ChevronRight size={16} color="#64748b" />}
+                    </button>
+                    {isOpen && cat.children?.length > 0 && (
+                      <div style={{ padding: '0 0 0.5rem' }}>
+                        {cat.children.map((child) => (
+                          <Link
+                            key={child}
+                            to={`/catalogo?cat=${encodeURIComponent(cat.id)}&sub=${encodeURIComponent(child)}`}
+                            style={{ display: 'block', padding: '0.4rem 1.1rem 0.4rem 2.2rem', color: '#475569', textDecoration: 'none', fontSize: '0.9rem' }}
+                          >
+                            {child}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
 
