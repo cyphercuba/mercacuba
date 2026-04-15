@@ -47,7 +47,16 @@ const Login = () => {
       if (!result.ok) {
         setError(result.error || 'Ocurrió un error.');
       } else {
-        setMessage(isLogin ? 'Sesión iniciada correctamente.' : 'Cuenta creada correctamente.');
+        if (isLogin) {
+          setMessage('Sesión iniciada correctamente.');
+        } else {
+          setMessage('Cuenta creada correctamente. Redirigiendo al inicio de sesión...');
+          setForm({ firstName: '', lastName: '', email: form.email, phone: '', password: '' });
+          setTimeout(() => {
+            setIsLogin(true);
+            setMessage('Ahora inicia sesión con tu cuenta nueva.');
+          }, 1400);
+        }
       }
     } catch (err) {
       setError('No se pudo conectar con el servidor.');
@@ -85,6 +94,16 @@ const Login = () => {
             {isLogin ? 'Ingresa tus credenciales para administrar tus envíos y compras.' : 'Únete a miles de familias que compran con seguridad.'}
           </p>
 
+          {!isLogin && message.startsWith('Cuenta creada correctamente') ? (
+            <div style={{ textAlign: 'center', padding: '2.5rem 1rem' }}>
+              <div style={{ fontSize: '1.9rem', fontWeight: 800, color: '#166534', marginBottom: '1rem' }}>
+                Cuenta creada correctamente
+              </div>
+              <p style={{ color: '#475569', fontSize: '1rem', marginBottom: 0 }}>
+                Redirigiendo al inicio de sesión...
+              </p>
+            </div>
+          ) : (
           <form className="auth-form" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }} onSubmit={handleSubmit}>
             {!isLogin && (
               <div className="auth-name-row" style={{ display: 'flex', gap: '1rem' }}>
@@ -140,6 +159,7 @@ const Login = () => {
               {loading ? 'Procesando...' : isLogin ? 'Ingresar a mi cuenta' : 'Completar registro'}
             </button>
           </form>
+          )}
 
           <div style={{ marginTop: '2rem', textAlign: 'center', borderTop: '1px solid #e2e8f0', paddingTop: '1.5rem' }}>
             <p style={{ fontSize: '0.9rem', color: '#64748b' }}>
