@@ -15,6 +15,7 @@ import Login from './pages/Login';
 import CompraMayorista from './pages/CompraMayorista';
 import Combos from './pages/Combos';
 import Membresias from './pages/Membresias';
+import MiCuenta from './pages/MiCuenta';
 import { useAuth } from './context/AuthContext';
 
 function AppLayout() {
@@ -40,6 +41,7 @@ function AppLayout() {
             <Route path="/mayorista-mipymes" element={<CompraMayorista />} />
             <Route path="/combos" element={<Combos />} />
             <Route path="/membresias" element={<Membresias />} />
+            <Route path="/mi-cuenta" element={<MiCuenta />} />
             <Route path="*" element={<div style={{ padding: 'var(--spacing-8) 0', minHeight: '60vh' }}><h1>Página en construcción</h1></div>} />
           </Routes>
         </main>

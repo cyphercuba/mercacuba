@@ -100,7 +100,7 @@ const Navbar = () => {
                 </button>
                 {isUserMenuOpen && (
                   <div style={{ position: 'absolute', top: 'calc(100% + 10px)', right: 0, width: '220px', backgroundColor: 'white', border: '1px solid #e2e8f0', borderRadius: '12px', boxShadow: '0 20px 40px rgba(15, 23, 42, 0.12)', padding: '0.6rem', zIndex: 60 }}>
-                    <Link to="/cuenta" onClick={() => setIsUserMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '0.8rem', borderRadius: '10px', color: '#0f172a', textDecoration: 'none' }}>
+                    <Link to="/mi-cuenta" onClick={() => setIsUserMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '0.8rem', borderRadius: '10px', color: '#0f172a', textDecoration: 'none' }}>
                       <User size={18} /> Mi cuenta
                     </Link>
                     <button type="button" style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '10px', padding: '0.8rem', borderRadius: '10px', color: '#0f172a', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.95rem' }}>
@@ -212,7 +212,7 @@ const Navbar = () => {
           <Link to="/ayuda" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 nav-link" style={{ fontSize: '1.1rem', color: 'var(--color-text-main)' }}><HelpCircle size={20} /> Ayuda</Link>
           {user ? (
             <>
-              <Link to="/cuenta" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 nav-link" style={{ fontSize: '1.1rem', color: 'var(--color-text-main)' }}><User size={20} /> {user.firstName || user.email}</Link>
+              <Link to="/mi-cuenta" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 nav-link" style={{ fontSize: '1.1rem', color: 'var(--color-text-main)' }}><User size={20} /> {user.firstName || user.email}</Link>
               <button onClick={() => { setIsMobileMenuOpen(false); navigate('/cuenta'); }} className="flex items-center gap-3 nav-link" style={{ fontSize: '1.1rem', color: 'var(--color-text-main)', background: 'none', border: 'none', textAlign: 'left', cursor: 'pointer' }}><Package size={20} /> Mis pedidos</button>
               <button onClick={() => { setIsMobileMenuOpen(false); navigate('/cuenta'); }} className="flex items-center gap-3 nav-link" style={{ fontSize: '1.1rem', color: 'var(--color-text-main)', background: 'none', border: 'none', textAlign: 'left', cursor: 'pointer' }}><MapPin size={20} /> Mis direcciones</button>
               <button onClick={async () => { await handleLogout(); setIsMobileMenuOpen(false); }} className="flex items-center gap-3 nav-link" style={{ fontSize: '1.1rem', color: '#b91c1c', background: 'none', border: 'none', textAlign: 'left', cursor: 'pointer' }}><LogOut size={20} /> Cerrar sesión</button>
