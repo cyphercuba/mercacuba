@@ -145,7 +145,7 @@ const Home = () => {
               color: 'white',
               borderRadius: 'var(--border-radius-lg)',
               overflow: 'hidden',
-              marginBottom: 'var(--spacing-6)',
+              marginBottom: 'var(--spacing-5)',
             }}
           >
             <div
@@ -178,12 +178,12 @@ const Home = () => {
               }}
             ></div>
 
-            <div className="hero-container" style={{ position: 'relative', zIndex: 1, padding: 'var(--spacing-12) var(--spacing-8)' }}>
-              <h1 className="hero-title" style={{ fontSize: '2.5rem', fontWeight: 800, lineHeight: 1.2, marginBottom: 'var(--spacing-4)', maxWidth: '500px' }}>
+            <div className="hero-container" style={{ position: 'relative', zIndex: 1, padding: 'var(--spacing-8) var(--spacing-7)' }}>
+              <h1 className="hero-title" style={{ fontSize: '2.1rem', fontWeight: 800, lineHeight: 1.15, marginBottom: 'var(--spacing-3)', maxWidth: '480px' }}>
                 Compra en República Dominicana <br />
                 <span style={{ color: 'var(--color-accent)' }}>para tu familia en Cuba</span>
               </h1>
-              <p className="hero-desc" style={{ fontSize: '1.1rem', maxWidth: '450px', marginBottom: 'var(--spacing-8)', opacity: 0.9 }}>
+              <p className="hero-desc" style={{ fontSize: '1rem', maxWidth: '430px', marginBottom: 'var(--spacing-6)', opacity: 0.9 }}>
                 Nosotros compramos, consolidamos y entregamos con amor.
               </p>
 
@@ -202,7 +202,7 @@ const Home = () => {
             </div>
           </section>
 
-          <section style={{ backgroundColor: '#0b2e59', color: 'white', borderRadius: 'var(--border-radius-md)', padding: 'var(--spacing-4) var(--spacing-8)', marginBottom: 'var(--spacing-6)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--spacing-4)' }}>
+          <section style={{ backgroundColor: '#0b2e59', color: 'white', borderRadius: 'var(--border-radius-md)', padding: 'var(--spacing-4) var(--spacing-6)', marginBottom: 'var(--spacing-6)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--spacing-4)' }}>
             <div className="flex items-center gap-2" style={{ fontSize: '0.875rem', fontWeight: 500 }}>
               <ShieldCheck size={20} opacity={0.8} /> Envíos seguros
             </div>
@@ -217,34 +217,7 @@ const Home = () => {
             </div>
           </section>
 
-          <section style={{ display: 'grid', gap: '1rem', marginBottom: 'var(--spacing-8)' }}>
-            {featuredLinks.map((item) => (
-              <Link
-                key={item.title}
-                to={item.to}
-                style={{
-                  ...filterCardStyle,
-                  padding: '1.25rem 1.35rem',
-                  textDecoration: 'none',
-                  color: 'inherit',
-                  display: 'block',
-                }}
-              >
-                <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.35rem' }}>{item.title}</div>
-                <p style={{ color: '#64748b', marginBottom: '0.8rem' }}>{item.text}</p>
-                <span style={{ color: '#0b2e59', fontWeight: 700, fontSize: '0.92rem' }}>Explorar</span>
-              </Link>
-            ))}
-          </section>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4" style={{ marginBottom: 'var(--spacing-8)' }}>
-            <div style={{ backgroundColor: 'var(--color-brand-blue)', color: 'white', padding: 'var(--spacing-4)', borderRadius: 'var(--border-radius)', display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)' }}>
-              <div style={{ backgroundColor: 'white', color: 'var(--color-brand-blue)', padding: '5px', borderRadius: '4px', fontWeight: 800 }}>/</div>
-              <div>
-                <h4 style={{ fontWeight: 600, fontSize: '0.9rem' }}>¿No encuentras algo?</h4>
-                <p style={{ fontSize: '0.75rem', opacity: 0.8 }}>Haz tu encargo personalizado</p>
-              </div>
-            </div>
             <div style={{ backgroundColor: '#1e3050', color: 'white', padding: 'var(--spacing-4)', borderRadius: 'var(--border-radius)', display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)' }}>
               <Truck size={24} color="#4ade80" />
               <div>
