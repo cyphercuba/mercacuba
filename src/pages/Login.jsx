@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Lock, Mail, Phone, ChevronLeft, LogOut, MapPin, Package } from 'lucide-react';
+import { User, Lock, Mail, Phone, ChevronLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser, registerUser } from '../lib/auth';
 import { useAuth } from '../context/AuthContext';
@@ -23,6 +23,12 @@ const Login = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
 
   const handleChange = (field) => (event) => {
     setForm((prev) => ({ ...prev, [field]: event.target.value }));
@@ -72,13 +78,6 @@ const Login = () => {
     }
   };
 
-  const handleLogout = async () => {
-    await signOut();
-    setMessage('Sesión cerrada correctamente.');
-    setError('');
-    navigate('/');
-  };
-
   return (
     <div style={{ 
       display: 'flex', 
@@ -102,35 +101,13 @@ const Login = () => {
           </Link>
 
           <h2 className="auth-title" style={{ fontSize: '1.875rem', fontWeight: 800, marginBottom: '0.5rem', color: '#0b2e59' }}>
-            {user ? `Hola, ${user.firstName || 'bienvenido'}` : isLogin ? 'Bienvenido de vuelta' : 'Crea tu cuenta gratis'}
+            {isLogin ? 'Bienvenido de vuelta' : 'Crea tu cuenta gratis'}
           </h2>
           <p className="auth-subtitle" style={{ color: '#64748b', marginBottom: '2rem', fontSize: '0.95rem' }}>
-            {user ? 'Tu sesión está activa. Desde aquí podrás gestionar tu cuenta, pedidos y direcciones.' : isLogin ? 'Ingresa tus credenciales para administrar tus envíos y compras.' : 'Únete a miles de familias que compran con seguridad.'}
+            {isLogin ? 'Ingresa tus credenciales para administrar tus envíos y compras.' : 'Únete a miles de familias que compran con seguridad.'}
           </p>
 
-          {user ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <div style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1rem' }}>
-                <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0b2e59', marginBottom: '0.4rem' }}>
-                  {user.firstName} {user.lastName}
-                </div>
-                <div style={{ color: '#475569', fontSize: '0.95rem', marginBottom: '0.25rem' }}>{user.email}</div>
-                {user.phone && <div style={{ color: '#475569', fontSize: '0.95rem' }}>{user.phone}</div>}
-              </div>
-
-              <div style={{ display: 'grid', gap: '0.75rem' }}>
-                <button type="button" style={{ width: '100%', padding: '14px', backgroundColor: '#0b2e59', color: 'white', borderRadius: '8px', border: 'none', fontSize: '1rem', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                  <Package size={18} /> Mis pedidos
-                </button>
-                <button type="button" style={{ width: '100%', padding: '14px', backgroundColor: '#e2e8f0', color: '#0f172a', borderRadius: '8px', border: 'none', fontSize: '1rem', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                  <MapPin size={18} /> Mis direcciones
-                </button>
-                <button type="button" onClick={handleLogout} style={{ width: '100%', padding: '14px', backgroundColor: '#fff1f2', color: '#b91c1c', borderRadius: '8px', border: '1px solid #fecdd3', fontSize: '1rem', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                  <LogOut size={18} /> Cerrar sesión
-                </button>
-              </div>
-            </div>
-          ) : !isLogin && message.startsWith('Cuenta creada correctamente') ? (
+          {!isLogin && message.startsWith('Cuenta creada correctamente') ? (
             <div style={{ textAlign: 'center', padding: '2.5rem 1rem' }}>
               <div style={{ fontSize: '1.9rem', fontWeight: 800, color: '#166534', marginBottom: '1rem' }}>
                 Cuenta creada correctamente
