@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShieldCheck, Truck, Clock, Lock, MessageCircle, ChevronDown, ChevronRight } from 'lucide-react';
+import { Truck, MessageCircle, Tag, DollarSign, ChevronDown, ChevronRight } from 'lucide-react';
 
 const categoryTree = [
   { id: 'despensa', name: '🥫 Despensa', children: ['Conservas', 'Aceites y salsas', 'Café e infusiones', 'Granos y legumbres', 'Galletas', 'Panadería', 'Confituras'] },
@@ -26,10 +26,19 @@ const categoryTree = [
   { id: 'otros', name: '📦 Otros', children: ['Otros productos', 'Congelados y refrigerados'] },
 ];
 
-const featuredLinks = [
-  { title: 'Combos familiares', text: 'Selecciones listas para enviar a Cuba con mejor relación valor-precio.', to: '/combos' },
-  { title: 'Encargos personalizados', text: 'Si no lo ves en catálogo, lo buscamos por ti y te damos respuesta rápida.', to: '/encargos' },
-  { title: 'Compra mayorista', text: 'Soluciones para mipymes, negocios y compras grandes desde RD.', to: '/mayorista-mipymes' },
+const priceRanges = [
+  'Menos de US$25',
+  'US$25 a US$50',
+  'US$50 a US$100',
+  'US$100 a US$250',
+  'Más de US$250',
+];
+
+const discountOptions = [
+  'Ofertas del día',
+  'Combos con descuento',
+  'Entrega rápida',
+  'Mayorista',
 ];
 
 const filterCardStyle = {
@@ -93,89 +102,37 @@ const Home = () => {
             </div>
           </div>
 
+          <div style={filterCardStyle}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '1rem 1.1rem', borderBottom: '1px solid #f1f5f9', fontWeight: 800, color: '#0f172a' }}>
+              <DollarSign size={18} /> Precio
+            </div>
+            <div style={{ padding: '0.5rem 1.1rem 0.9rem' }}>
+              {priceRanges.map((range) => (
+                <label key={range} style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', padding: '0.45rem 0', fontSize: '0.92rem', color: '#334155', cursor: 'pointer' }}>
+                  <input type="checkbox" style={{ accentColor: '#0b2e59' }} />
+                  {range}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div style={filterCardStyle}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '1rem 1.1rem', borderBottom: '1px solid #f1f5f9', fontWeight: 800, color: '#0f172a' }}>
+              <Tag size={18} /> Ofertas y descuentos
+            </div>
+            <div style={{ padding: '0.5rem 1.1rem 0.9rem' }}>
+              {discountOptions.map((option) => (
+                <label key={option} style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', padding: '0.45rem 0', fontSize: '0.92rem', color: '#334155', cursor: 'pointer' }}>
+                  <input type="checkbox" style={{ accentColor: '#0b2e59' }} />
+                  {option}
+                </label>
+              ))}
+            </div>
+          </div>
         </aside>
 
         <div>
-          <section
-            style={{
-              position: 'relative',
-              backgroundColor: 'var(--color-brand-blue)',
-              color: 'white',
-              borderRadius: 'var(--border-radius-lg)',
-              overflow: 'hidden',
-              marginBottom: 'var(--spacing-5)',
-            }}
-          >
-            <div
-              className="hidden-mobile"
-              style={{
-                position: 'absolute',
-                top: 0,
-                right: 0,
-                bottom: 0,
-                width: '55%',
-                zIndex: 0,
-                display: 'flex',
-                justifyContent: 'flex-end',
-                alignItems: 'center',
-                overflow: 'hidden',
-              }}
-            >
-              <img src="/dr_cuba_map.png" alt="Dominican Republic to Cuba" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.9, mixBlendMode: 'screen' }} />
-            </div>
-
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: 'linear-gradient(90deg, rgba(9,46,92,1) 45%, rgba(9,46,92,0) 100%)',
-                zIndex: 0,
-              }}
-            ></div>
-
-            <div className="hero-container" style={{ position: 'relative', zIndex: 1, padding: 'var(--spacing-8) var(--spacing-7)' }}>
-              <h1 className="hero-title" style={{ fontSize: '2.1rem', fontWeight: 800, lineHeight: 1.15, marginBottom: 'var(--spacing-3)', maxWidth: '480px' }}>
-                Compra en República Dominicana <br />
-                <span style={{ color: 'var(--color-accent)' }}>para tu familia en Cuba</span>
-              </h1>
-              <p className="hero-desc" style={{ fontSize: '1rem', maxWidth: '430px', marginBottom: 'var(--spacing-6)', opacity: 0.9 }}>
-                Nosotros compramos, consolidamos y entregamos con amor.
-              </p>
-
-              <div className="flex gap-4 hero-buttons">
-                <Link to="/catalogo" className="btn btn-secondary" style={{ padding: 'var(--spacing-3) var(--spacing-6)', fontSize: '1rem', fontWeight: 600, display: 'inline-block', textDecoration: 'none' }}>
-                  Comprar ahora
-                </Link>
-                <Link to="/mayorista-mipymes" className="btn btn-gold-hover" style={{ padding: 'var(--spacing-3) var(--spacing-6)', fontSize: '1rem', fontWeight: 600, border: '1px solid white', backgroundColor: 'transparent', color: 'white', textDecoration: 'none', display: 'inline-block' }}>
-                  Compra Mayorista
-                </Link>
-              </div>
-            </div>
-
-            <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: '45%', zIndex: 0, opacity: 0.1, pointerEvents: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10%' }}>
-              <img src="/logo.png" alt="" style={{ width: '100%', objectFit: 'contain', filter: 'invert(1)', mixBlendMode: 'screen' }} />
-            </div>
-          </section>
-
-          <section style={{ backgroundColor: '#0b2e59', color: 'white', borderRadius: 'var(--border-radius-md)', padding: 'var(--spacing-4) var(--spacing-6)', marginBottom: 'var(--spacing-6)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--spacing-4)' }}>
-            <div className="flex items-center gap-2" style={{ fontSize: '0.875rem', fontWeight: 500 }}>
-              <ShieldCheck size={20} opacity={0.8} /> Envíos seguros
-            </div>
-            <div className="flex items-center gap-2" style={{ fontSize: '0.875rem', fontWeight: 500 }}>
-              <Truck size={20} opacity={0.8} /> Entrega confiable
-            </div>
-            <div className="flex items-center gap-2" style={{ fontSize: '0.875rem', fontWeight: 500 }}>
-              <Clock size={20} opacity={0.8} /> Soporte 24/7
-            </div>
-            <div className="flex items-center gap-2" style={{ fontSize: '0.875rem', fontWeight: 500 }}>
-              <Lock size={20} opacity={0.8} /> Pagos seguros
-            </div>
-          </section>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4" style={{ marginBottom: 'var(--spacing-8)' }}>
+          <div style={{ display: 'grid', gap: '1rem', marginBottom: 'var(--spacing-8)' }}>
             <div style={{ backgroundColor: '#1e3050', color: 'white', padding: 'var(--spacing-4)', borderRadius: 'var(--border-radius)', display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)' }}>
               <Truck size={24} color="#4ade80" />
               <div>
