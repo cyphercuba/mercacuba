@@ -135,34 +135,6 @@ const Navbar = () => {
         <div className="container flex justify-between items-center nav-overflow-mobile" style={{ height: '48px' }}>
           
           <div className="flex items-center gap-6">
-            <div className="nav-dropdown" style={{ position: 'relative', display: 'flex', alignItems: 'center', height: '48px', cursor: 'pointer' }}>
-              <div className="flex items-center gap-2 nav-link" style={{ fontWeight: 600 }}>
-                <Menu size={18} /> Categorías
-              </div>
-              <div className="dropdown-content" style={{ maxHeight: '400px', overflowY: 'auto' }}>
-                <Link to="/catalogo?cat=entregas-rapidas">Entregas Rápidas</Link>
-                <Link to="/catalogo?cat=alimentos">Alimentos</Link>
-                <Link to="/catalogo?cat=combos-de-alimentos">Combos de Alimentos</Link>
-                <Link to="/catalogo?cat=bebidas">Bebidas</Link>
-                <Link to="/catalogo?cat=aseo-e-higiene">Aseo e Higiene</Link>
-                <Link to="/catalogo?cat=electrodomesticos">Electrodomésticos</Link>
-                <Link to="/catalogo?cat=bicicletas-electricas">Bicicletas Eléctricas</Link>
-                <Link to="/catalogo?cat=motos-de-gasolina">Motos de Gasolina</Link>
-                <Link to="/catalogo?cat=triciclos">Triciclos Eléctricos o Híbridos</Link>
-                <Link to="/catalogo?cat=plantas-electricas">Plantas Eléctricas</Link>
-                <Link to="/catalogo?cat=ferreteria">Ferretería</Link>
-                <Link to="/catalogo?cat=aires-acondicionados">Aires Acondicionados</Link>
-                <Link to="/catalogo?cat=colchones">Colchones</Link>
-                <Link to="/catalogo?cat=articulos-del-hogar">Artículos del Hogar</Link>
-                <Link to="/catalogo?cat=articulos-de-escuela">Artículos de Escuela</Link>
-                <Link to="/catalogo?cat=juguetes-y-deportes">Juguetes y Deportes</Link>
-                <Link to="/catalogo?cat=telefonos-celulares">Teléfonos Celulares</Link>
-                <Link to="/catalogo?cat=dulces-y-confituras">Dulces y Confituras</Link>
-                <Link to="/catalogo?cat=otros">Otros</Link>
-                <div style={{ height: '1px', backgroundColor: 'var(--color-border)', margin: '4px 0' }}></div>
-                <Link to="/catalogo" style={{ fontWeight: 'bold' }}>Todas las categorías</Link>
-              </div>
-            </div>
             <Link to="/combos" className="nav-link">Combos</Link>
             <Link to="/encargos" className="nav-link">Encargos</Link>
             <Link to="/ofertas" className="nav-link">Ofertas</Link>
