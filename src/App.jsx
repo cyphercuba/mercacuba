@@ -18,7 +18,7 @@ import Membresias from './pages/Membresias';
 import MiCuenta from './pages/MiCuenta';
 import AdminDashboard from './pages/Admin/Dashboard';
 import { useAuth } from './context/AuthContext';
-import { ShopProvider } from './context/Context';
+import { ShopProvider } from './context/ShopContext';
 import LocationModal from './components/Modals/LocationModal';
 import WhatsAppFloating from './components/Support/WhatsAppFloating';
 
