@@ -26,7 +26,11 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
-      navigate('/');
+      if (user.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
     }
   }, [user, navigate]);
 
@@ -60,7 +64,11 @@ const Login = () => {
           if (result.user) setUser(result.user);
           setMessage('Sesión iniciada correctamente. Redirigiendo...');
           setTimeout(() => {
-            navigate('/');
+            if (result.user.role === 'admin') {
+              navigate('/admin');
+            } else {
+              navigate('/');
+            }
           }, 900);
         } else {
           setMessage('Cuenta creada correctamente. Redirigiendo al inicio de sesión...');
