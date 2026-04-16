@@ -23,7 +23,8 @@ function AppLayout() {
   const location = useLocation();
   const { user } = useAuth();
   const isAdminPath = location.pathname.startsWith('/admin');
-  const hideSidebar = (user && (location.pathname === '/mi-cuenta' || location.pathname === '/registro')) || isAdminPath;
+  const authPaths = ['/cuenta', '/registro'];
+  const hideSidebar = authPaths.includes(location.pathname) || (user && location.pathname === '/mi-cuenta') || isAdminPath;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>

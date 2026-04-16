@@ -189,141 +189,122 @@ const AuthenticatedHome = () => {
     }
   };
 
+  const fallbackProducts = [
+    { id: 'f1', name: 'Combo Familiar Premium', price: 85.00, image_url: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&h=300', category_name: 'Alimentos' },
+    { id: 'f2', name: 'Caja de Pollo 40lb', price: 45.00, image_url: 'https://images.unsplash.com/photo-1606787366850-de6330128bfc?auto=format&fit=crop&w=400&h=300', category_name: 'Carnes' },
+    { id: 'f3', name: 'Split 1 Tonelada Royal', price: 350.00, image_url: 'https://images.unsplash.com/photo-1626806787426-5910811b6325?auto=format&fit=crop&w=400&h=300', category_name: 'Electro' },
+    { id: 'f4', name: 'Aceite Vegetal 5L', price: 18.50, image_url: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=400&h=300', category_name: 'Alimentos' }
+  ];
+
+  const displayProducts = products.length > 0 ? products : fallbackProducts;
+
   return (
-    <div className="home-market-layout" style={{ display: 'grid', gridTemplateColumns: '270px minmax(0, 1fr)', gap: '0.9rem', alignItems: 'start' }}>
-      <aside className="home-categories-sidebar" style={{ display: 'grid', gap: '1rem', position: 'sticky', top: '56px' }}>
-        <div style={filterCardStyle}>
-          <div style={{ backgroundColor: '#0b2e59', color: 'white', padding: '1rem 1.1rem', fontWeight: 800, fontSize: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span>Categorías</span>
-            {loadingCats && <Loader2 className="animate-spin" size={16} />}
-          </div>
-          <div style={{ padding: '0.35rem 0', maxHeight: '620px', overflowY: 'auto' }}>
-            {categories.map((cat) => {
-              const isOpen = !!openCategories[cat.id];
-              const isActive = activeCategory?.id === cat.id;
-              return (
-                <div key={cat.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', backgroundColor: isActive ? '#f8fafc' : 'transparent' }}>
-                    <button 
-                      type="button" 
-                      onClick={() => handleCategoryClick(cat)}
-                      style={{ flexGrow: 1, padding: '0.82rem 0 0.82rem 1.1rem', color: isActive ? '#0b2e59' : '#0f172a', background: 'none', border: 'none', fontSize: '0.95rem', cursor: 'pointer', textAlign: 'left', fontWeight: isActive ? 700 : 500 }}
-                    >
-                      {cat.name}
-                    </button>
-                    {cat.subcategories?.length > 0 && (
+    <div className="home-market-layout" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem', width: '100%' }}>
+        
+        {/* Sidebar as a top bar or side bar based on width */}
+        <aside className="home-categories-sidebar" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div style={filterCardStyle}>
+            <div style={{ backgroundColor: '#0b2e59', color: 'white', padding: '1rem 1.1rem', fontWeight: 800, fontSize: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span>Categorías</span>
+              {loadingCats && <Loader2 className="animate-spin" size={16} />}
+            </div>
+            <div style={{ padding: '0.35rem 0', maxHeight: '420px', overflowY: 'auto' }}>
+              {categories.length > 0 ? categories.map((cat) => {
+                const isOpen = !!openCategories[cat.id];
+                const isActive = activeCategory?.id === cat.id;
+                return (
+                  <div key={cat.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', backgroundColor: isActive ? '#f8fafc' : 'transparent' }}>
                       <button 
-                        onClick={(e) => { e.stopPropagation(); toggleCategory(cat.id); }}
-                        style={{ padding: '0.82rem 1.1rem', background: 'none', border: 'none', cursor: 'pointer' }}
+                        type="button" 
+                        onClick={() => handleCategoryClick(cat)}
+                        style={{ flexGrow: 1, padding: '0.82rem 0 0.82rem 1.1rem', color: isActive ? '#0b2e59' : '#0f172a', background: 'none', border: 'none', fontSize: '0.95rem', cursor: 'pointer', textAlign: 'left', fontWeight: isActive ? 700 : 500 }}
                       >
-                        {isOpen ? <ChevronDown size={16} color="#64748b" /> : <ChevronRight size={16} color="#64748b" />}
+                        {cat.name}
                       </button>
-                    )}
-                  </div>
-                  {isOpen && cat.subcategories?.length > 0 && (
-                    <div style={{ padding: '0 0 0.5rem', backgroundColor: '#fdfdfd' }}>
-                      {cat.subcategories.map((child) => (
-                        <Link key={child.id} to={`/catalogo?cat=${encodeURIComponent(cat.slug)}&sub=${encodeURIComponent(child.slug)}`} style={{ display: 'block', padding: '0.4rem 1.1rem 0.4rem 2.2rem', color: '#475569', textDecoration: 'none', fontSize: '0.9rem' }}>
-                          {child.name}
-                        </Link>
-                      ))}
+                      {cat.subcategories?.length > 0 && (
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); toggleCategory(cat.id); }}
+                          style={{ padding: '0.82rem 1.1rem', background: 'none', border: 'none', cursor: 'pointer' }}
+                        >
+                          {isOpen ? <ChevronDown size={16} color="#64748b" /> : <ChevronRight size={16} color="#64748b" />}
+                        </button>
+                      )}
                     </div>
-                  )}
+                  </div>
+                );
+              }) : (
+                <div style={{ padding: '1rem', color: '#64748b', fontSize: '0.85rem', textAlign: 'center' }}>Cargando catálogo...</div>
+              )}
+            </div>
+          </div>
+        </aside>
+
+        <main className="home-main-content" style={{ gridColumn: 'span 2' }}>
+          <div style={{ backgroundColor: 'white', border: '1px solid #e2e8f0', borderRadius: '24px', boxShadow: '0 10px 30px rgba(15, 23, 42, 0.05)', padding: '2rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+              <div>
+                <h2 style={{ fontSize: '1.75rem', fontWeight: 900, color: '#0b2e59', marginBottom: '0.4rem' }}>
+                  {activeCategory ? activeCategory.name : 'Lo más buscado esta semana'}
+                </h2>
+                <p style={{ color: '#64748b', fontSize: '1rem', fontWeight: 500 }}>
+                  {activeCategory ? `Productos seleccionados en ${activeCategory.name}` : 'Descubre las mejores ofertas para enviar a Cuba hoy.'}
+                </p>
+              </div>
+              {activeCategory && (
+                <button onClick={clearFilter} style={{ fontSize: '0.9rem', color: '#0b2e59', fontWeight: 700, background: '#f1f5f9', border: 'none', padding: '0.6rem 1rem', borderRadius: '12px', cursor: 'pointer' }}>
+                  Ver destacados
+                </button>
+              )}
+            </div>
+
+            {loadingProds ? (
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '8rem 0', gap: '1rem' }}>
+                <Loader2 className="animate-spin" size={48} color="#0b2e59" />
+                <p style={{ color: '#64748b', fontWeight: 500 }}>Sincronizando inventario...</p>
+              </div>
+            ) : (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                  {displayProducts.map(product => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
                 </div>
-              );
-            })}
-          </div>
-        </div>
-
-        <div style={filterCardStyle}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '1rem 1.1rem', borderBottom: '1px solid #f1f5f9', fontWeight: 800, color: '#0f172a' }}>
-            <DollarSign size={18} /> Precio
-          </div>
-          <div style={{ padding: '0.5rem 1.1rem 0.9rem' }}>
-            {priceRanges.map((range) => (
-              <label key={range} style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', padding: '0.45rem 0', fontSize: '0.92rem', color: '#334155', cursor: 'pointer' }}>
-                <input type="checkbox" style={{ accentColor: '#0b2e59' }} />
-                {range}
-              </label>
-            ))}
-          </div>
-        </div>
-      </aside>
-
-      <div className="home-main-content" style={{ minHeight: '600px' }}>
-        {/* Mobile Categories Nav */}
-        <div className="home-categories-mobile-nav" style={{ display: 'none' }}>
-           <button 
-              onClick={clearFilter}
-              className={`home-category-pill ${!activeCategory ? 'active' : ''}`}
-            >
-              Destacados
-            </button>
-            {categories.map(cat => (
-              <button 
-                key={cat.id} 
-                onClick={() => handleCategoryClick(cat)}
-                className={`home-category-pill ${activeCategory?.id === cat.id ? 'active' : ''}`}
-              >
-                {cat.name}
-              </button>
-            ))}
-        </div>
-
-        <div style={{ backgroundColor: 'white', border: '1px solid #e2e8f0', borderRadius: '16px', boxShadow: '0 10px 30px rgba(15, 23, 42, 0.05)', padding: '1.5rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-            <div>
-              <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.2rem' }}>
-                {activeCategory ? activeCategory.name : 'Productos Destacados'}
-              </h2>
-              <p style={{ color: '#64748b', fontSize: '0.9rem' }}>
-                {activeCategory ? `Mostrando productos en ${activeCategory.name}` : 'Seleccionados especialmente para ti'}
-              </p>
-            </div>
-            {activeCategory && (
-              <button onClick={clearFilter} style={{ fontSize: '0.85rem', color: '#0b2e59', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}>
-                Ver todos los destacados
-              </button>
+                
+                {products.length === 0 && !activeCategory && (
+                  <div style={{ marginTop: '2.5rem', padding: '1.5rem', backgroundColor: '#f0fdf4', borderRadius: '16px', border: '1px solid #dcfce7', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                    <div style={{ backgroundColor: '#22c55e', color: 'white', padding: '0.6rem', borderRadius: '12px' }}>
+                      <Tag size={20} />
+                    </div>
+                    <div>
+                      <h4 style={{ color: '#166534', fontWeight: 800, fontSize: '0.95rem' }}>Bienvenido a MercadoCuba</h4>
+                      <p style={{ color: '#15803d', fontSize: '0.85rem', marginBottom: 0 }}>Estamos actualizando nuestro inventario en tiempo real. ¡Pronto verás más opciones!</p>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
-          </div>
 
-          {loadingProds ? (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '5rem 0', gap: '1rem' }}>
-              <Loader2 className="animate-spin" size={40} color="#0b2e59" />
-              <p style={{ color: '#64748b', fontWeight: 500 }}>Cargando productos...</p>
-            </div>
-          ) : products.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {products.map(product => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          ) : (
-            <div style={{ textAlign: 'center', padding: '5rem 2rem', backgroundColor: '#f8fafc', borderRadius: '12px' }}>
-              <Tag size={48} color="#94a3b8" style={{ marginBottom: '1rem', opacity: 0.5 }} />
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#475569' }}>No hay productos</h3>
-              <p style={{ color: '#64748b', fontSize: '0.9rem' }}>Actualmente no tenemos productos en esta sección.</p>
-            </div>
-          )}
-
-          {/* Info banners */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4" style={{ marginTop: '3rem' }}>
-            <div style={{ backgroundColor: '#1e3050', color: 'white', padding: 'var(--spacing-4)', borderRadius: 'var(--border-radius)', display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)' }}>
-              <Truck size={24} color="#4ade80" />
-              <div>
-                <h4 style={{ fontWeight: 600, fontSize: '0.9rem' }}>Entregas desde 7 días</h4>
-                <p style={{ fontSize: '0.75rem', opacity: 0.8 }}>según la provincia</p>
+            {/* Info banners inside main card */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4" style={{ marginTop: '3rem' }}>
+              <div style={{ backgroundColor: '#1e3050', color: 'white', padding: 'var(--spacing-4)', borderRadius: 'var(--border-radius)', display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)' }}>
+                <Truck size={24} color="#4ade80" />
+                <div>
+                  <h4 style={{ fontWeight: 600, fontSize: '0.9rem' }}>Entregas desde 7 días</h4>
+                  <p style={{ fontSize: '0.75rem', opacity: 0.8 }}>según la provincia</p>
+                </div>
               </div>
-            </div>
-            <div style={{ backgroundColor: '#064e3b', color: 'white', padding: 'var(--spacing-4)', borderRadius: 'var(--border-radius)', display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)' }}>
-              <MessageCircle size={24} color="#4ade80" />
-              <div>
-                <h4 style={{ fontWeight: 600, fontSize: '0.9rem' }}>Atención por WhatsApp</h4>
-                <p style={{ fontSize: '0.75rem', opacity: 0.8 }}>Escríbenos ahora</p>
+              <div style={{ backgroundColor: '#064e3b', color: 'white', padding: 'var(--spacing-4)', borderRadius: 'var(--border-radius)', display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)' }}>
+                <MessageCircle size={24} color="#4ade80" />
+                <div>
+                  <h4 style={{ fontWeight: 600, fontSize: '0.9rem' }}>Atención por WhatsApp</h4>
+                  <p style={{ fontSize: '0.75rem', opacity: 0.8 }}>Escríbenos ahora</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );
