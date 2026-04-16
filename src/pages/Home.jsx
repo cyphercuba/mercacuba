@@ -5,15 +5,89 @@ import { useAuth } from '../context/AuthContext';
 import { getCategories, getProducts } from '../lib/catalog';
 import ProductCard from '../components/ProductCard';
 
+// Secondary condensed list for public home hero
 const publicCatalogCats = [
-  { id: 'alimentos', name: 'Alimentos', image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=200&h=200&q=80' },
-  { id: 'bebidas', name: 'Bebidas', image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=200&h=200&q=80' },
-  { id: 'aseo-e-higiene', name: 'Higiene', image: '/hygiene_combo.png' },
-  { id: 'ferreteria', name: 'Construcción', image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=200&h=200&q=80' },
-  { id: 'electrodomesticos', name: 'Electrodomésticos', image: 'https://images.unsplash.com/photo-1626806787426-5910811b6325?auto=format&fit=crop&w=200&h=200&q=80' },
-  { id: 'articulos-del-hogar', name: 'Hogar', image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=200&h=200&q=80' },
-  { id: 'mayorista', name: 'Venta Mayorista', image: '/wholesale_pallet.png' },
-  { id: 'otros', name: 'Más', image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=200&h=200&q=80' },
+  { id: 'despensa', slug: 'despensa', name: '🥫 Despensa', image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=200&h=200&q=80' },
+  { id: 'huevos-lacteos', slug: 'huevos-lacteos', name: '🥚 Lácteos', image: 'https://images.unsplash.com/photo-1550583726-277029b7df99?auto=format&fit=crop&w=200&h=200&q=80' },
+  { id: 'carnicos', slug: 'carnicos', name: '🥩 Cárnicos', image: 'https://images.unsplash.com/photo-1607623198453-74e430d4be2a?auto=format&fit=crop&w=200&h=200&q=80' },
+  { id: 'bebidas', slug: 'bebidas', name: '🥤 Bebidas', image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=200&h=200&q=80' },
+  { id: 'electrodomesticos', slug: 'electrodomesticos', name: '🔌 Electro', image: 'https://images.unsplash.com/photo-1626806787426-5910811b6325?auto=format&fit=crop&w=200&h=200&q=80' },
+  { id: 'agro', slug: 'agro', name: '🌾 Agro', image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=200&h=200&q=80' },
+  { id: 'limpieza-utiles', slug: 'limpieza-utiles', name: '🧼 Limpieza', image: '/hygiene_combo.png' },
+  { id: 'otros', slug: 'otros', name: 'Más', image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=200&h=200&q=80' },
+];
+
+const fullHierarchyFallback = [
+  { id: 1, name: '🥫 Despensa', slug: 'despensa', subcategories: [
+    { id: 101, name: 'Conservas', slug: 'conservas' }, { id: 102, name: 'Aceites y salsas', slug: 'aceites-salsas' },
+    { id: 103, name: 'Café e infusiones', slug: 'cafe-infusiones' }, { id: 104, name: 'Granos y legumbres', slug: 'granos-legumbres' },
+    { id: 105, name: 'Galletas', slug: 'galletas' }, { id: 106, name: 'Panadería', slug: 'panaderia' }, { id: 107, name: 'Confituras', slug: 'confituras' }
+  ]},
+  { id: 2, name: '🥚 Huevos y Lácteos', slug: 'huevos-lacteos', subcategories: [
+    { id: 201, name: 'Huevos', slug: 'huevos' }, { id: 202, name: 'Lácteos', slug: 'lacteos' }
+  ]},
+  { id: 3, name: '🥩 Cárnicos', slug: 'carnicos', subcategories: [
+    { id: 301, name: 'Carne de res', slug: 'carne-res' }, { id: 302, name: 'Cerdo', slug: 'cerdo' }, 
+    { id: 303, name: 'Pollo', slug: 'pollo' }, { id: 304, name: 'Cordero (Carnero)', slug: 'cordero-carnero' },
+    { id: 305, name: 'Embutidos', slug: 'embutidos' }, { id: 306, name: 'Cárnicos varios', slug: 'carnicos-varios' }
+  ]},
+  { id: 4, name: '🍰 Dulces y Helados', slug: 'dulces-helados', subcategories: [
+    { id: 401, name: 'Cakes y tartas', slug: 'cakes-tartas' }, { id: 402, name: 'Helados', slug: 'helados' }, { id: 403, name: 'Dulces caseros', slug: 'dulces-caseros' }
+  ]},
+  { id: 5, name: '🧴 Aseo y Cuidado Personal', slug: 'aseo-cuidado-personal', subcategories: [
+    { id: 501, name: 'Productos de aseo', slug: 'productos-aseo' }, { id: 502, name: 'Perfumes', slug: 'perfumes' }
+  ]},
+  { id: 6, name: '🍽️ Cenas y Bufets', slug: 'cenas-bufets', subcategories: [
+    { id: 601, name: 'Comidas preparadas', slug: 'comidas-preparadas' }, { id: 602, name: 'Catering / Bufet', slug: 'catering-bufet' }
+  ]},
+  { id: 7, name: '🔌 Electrodomésticos', slug: 'electrodomesticos', subcategories: [
+    { id: 701, name: 'Cocina', slug: 'cocina' }, { id: 702, name: 'Refrigeración', slug: 'refrigeracion' },
+    { id: 703, name: 'Lavado', slug: 'lavado' }, { id: 704, name: 'Pequeños electrodomésticos', slug: 'pequenos-electrodomesticos' }
+  ]},
+  { id: 8, name: '🐟 Pescados y Mariscos', slug: 'pescados-mariscos', subcategories: [
+    { id: 801, name: 'Pescados', slug: 'pescados' }, { id: 802, name: 'Mariscos', slug: 'mariscos' }
+  ]},
+  { id: 9, name: '🥤 Bebidas', slug: 'bebidas', subcategories: [
+    { id: 901, name: 'Refrescos', slug: 'refrescos' }, { id: 902, name: 'Jugos', slug: 'jugos' },
+    { id: 903, name: 'Bebidas alcohólicas', slug: 'bebidas-alcoholicas' }, { id: 904, name: 'Agua', slug: 'agua' }
+  ]},
+  { id: 10, name: '🌾 De Agro', slug: 'agro', subcategories: [
+    { id: 1001, name: 'Viandas', slug: 'viandas' }, { id: 1002, name: 'Vegetales', slug: 'vegetales' }, { id: 1003, name: 'Frutas', slug: 'frutas' }
+  ]},
+  { id: 11, name: '💊 Farmacia', slug: 'farmacia', subcategories: [
+    { id: 1101, name: 'Medicamentos', slug: 'medicamentos' }, { id: 1102, name: 'Vitaminas', slug: 'vitaminas' }, { id: 1103, name: 'Productos médicos', slug: 'productos-medicos' }
+  ]},
+  { id: 12, name: '🔧 Ferretería', slug: 'ferreteria', subcategories: [
+    { id: 1201, name: 'Herramientas', slug: 'herramientas' }, { id: 1202, name: 'Materiales de construcción', slug: 'materiales-construccion' }
+  ]},
+  { id: 13, name: '🍕 Alimentos Preelaborados', slug: 'alimentos-preelaborados', subcategories: [
+    { id: 1301, name: 'Pizzas', slug: 'pizzas' }, { id: 1302, name: 'Comida rápida', slug: 'comida-rapida' }, { id: 1303, name: 'Congelados', slug: 'congelados-alimentos' }
+  ]},
+  { id: 14, name: '🧼 Limpieza y Útiles', slug: 'limpieza-utiles', subcategories: [
+    { id: 1401, name: 'Productos de limpieza', slug: 'productos-limpieza' }, { id: 1402, name: 'Utensilios del hogar', slug: 'utensilios-hogar' }
+  ]},
+  { id: 15, name: '🎁 Regalos', slug: 'regalos', subcategories: [
+    { id: 1501, name: 'Regalos para hombre', slug: 'regalos-hombre' }, { id: 1502, name: 'Regalos para mujer', slug: 'regalos-mujer' },
+    { id: 1503, name: 'Regalos para niños/as', slug: 'regalos-ninos' }, { id: 1504, name: 'Flores', slug: 'flores' }
+  ]},
+  { id: 16, name: '🛠️ Piezas y Accesorios', slug: 'piezas-accesorios', subcategories: [
+    { id: 1601, name: 'Repuestos', slug: 'repuestos' }, { id: 1602, name: 'Accesorios varios', slug: 'accesorios-varios' }
+  ]},
+  { id: 17, name: '🛋️ Hogar y Mobiliario', slug: 'hogar-mobiliario', subcategories: [
+    { id: 1701, name: 'Muebles', slug: 'muebles' }, { id: 1702, name: 'Decoración', slug: 'decoracion' }
+  ]},
+  { id: 18, name: '🎒 Infantiles y Escolares', slug: 'infantiles-escolares', subcategories: [
+    { id: 1801, name: 'Útiles escolares', slug: 'utiles-escolares' }, { id: 1802, name: 'Productos infantiles', slug: 'productos-infantiles' }
+  ]},
+  { id: 19, name: '👕 Moda y Accesorios', slug: 'moda-accesorios', subcategories: [
+    { id: 1901, name: 'Ropa', slug: 'ropa' }, { id: 1902, name: 'Accesorios', slug: 'accesorios-moda' }
+  ]},
+  { id: 20, name: '👶 Bebé', slug: 'bebe', subcategories: [
+    { id: 2001, name: 'Productos para bebé', slug: 'productos-bebe' }
+  ]},
+  { id: 21, name: '📦 Otros', slug: 'otros', subcategories: [
+    { id: 2101, name: 'Otros productos', slug: 'otros-productos' }, { id: 2102, name: 'Congelados y refrigerados', slug: 'congelados-refrigerados' }
+  ]}
 ];
 
 const priceRanges = ['Menos de US$25', 'US$25 a US$50', 'US$50 a US$100', 'US$100 a US$250', 'Más de US$250'];
@@ -84,7 +158,7 @@ const PublicHome = () => (
 
       <div className="grid grid-cols-4 md:grid-cols-8 gap-4 categories-grid-mobile">
         {publicCatalogCats.map((cat) => (
-          <Link key={cat.id} to={`/catalogo?cat=${cat.id}`} className="flex flex-col items-center gap-2 category-item-mobile" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Link key={cat.id} to={`/catalogo?cat=${cat.slug}`} className="flex flex-col items-center gap-2 category-item-mobile" style={{ textDecoration: 'none', color: 'inherit' }}>
             <div className="category-img-container" style={{ padding: '4px', border: '1px solid var(--color-border)', width: '100%', aspectRatio: '1/1', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'transform 0.2s', cursor: 'pointer', overflow: 'hidden' }}>
               <img src={cat.image} alt={cat.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
             </div>
@@ -127,14 +201,9 @@ const AuthenticatedHome = () => {
       try {
         const catRes = await getCategories();
         if (catRes.ok) {
-          setCategories(catRes.categories);
-          // Only open a few by default to reduce noise
+          setCategories(catRes.categories || []);
+          // Only open active one if any
           const initialOpen = {};
-          if (catRes.categories?.length > 0) {
-            catRes.categories.slice(0, 2).forEach(c => {
-               if (c.subcategories?.length > 0) initialOpen[c.id] = true;
-            });
-          }
           setOpenCategories(initialOpen);
         }
       } catch (err) {
@@ -147,7 +216,7 @@ const AuthenticatedHome = () => {
       try {
         const prodRes = await getProducts({ featured: true, limit: 12 });
         if (prodRes.ok) {
-          setProducts(prodRes.products);
+          setProducts(prodRes.products || []);
         }
       } catch (err) {
         console.error("Error loading products", err);
@@ -168,7 +237,7 @@ const AuthenticatedHome = () => {
     try {
       const prodRes = await getProducts({ category: category.slug, limit: 12 });
       if (prodRes.ok) {
-        setProducts(prodRes.products);
+        setProducts(prodRes.products || []);
       }
     } catch (err) {
       console.error("Error loading category products", err);
@@ -183,7 +252,7 @@ const AuthenticatedHome = () => {
     try {
       const prodRes = await getProducts({ featured: true, limit: 12 });
       if (prodRes.ok) {
-        setProducts(prodRes.products);
+        setProducts(prodRes.products || []);
       }
     } catch (err) {
       console.error("Error resetting filters", err);
@@ -193,13 +262,14 @@ const AuthenticatedHome = () => {
   };
 
   const fallbackProducts = [
-    { id: 'f1', name: 'Combo Familiar Premium', price: 85.00, image_url: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&h=300', category_name: 'Alimentos' },
-    { id: 'f2', name: 'Caja de Pollo 40lb', price: 45.00, image_url: 'https://images.unsplash.com/photo-1606787366850-de6330128bfc?auto=format&fit=crop&w=400&h=300', category_name: 'Carnes' },
-    { id: 'f3', name: 'Split 1 Tonelada Royal', price: 350.00, image_url: 'https://images.unsplash.com/photo-1626806787426-5910811b6325?auto=format&fit=crop&w=400&h=300', category_name: 'Electro' },
-    { id: 'f4', name: 'Aceite Vegetal 5L', price: 18.50, image_url: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=400&h=300', category_name: 'Alimentos' }
+    { id: 'f1', name: 'Combo Familiar Premium', price: 85.00, image_url: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&h=300', category_name: '🥫 Despensa' },
+    { id: 'f2', name: 'Caja de Pollo 40lb', price: 45.00, image_url: 'https://images.unsplash.com/photo-1606787366850-de6330128bfc?auto=format&fit=crop&w=400&h=300', category_name: '🥩 Cárnicos' },
+    { id: 'f3', name: 'Split 1 Tonelada Royal', price: 350.00, image_url: 'https://images.unsplash.com/photo-1626806787426-5910811b6325?auto=format&fit=crop&w=400&h=300', category_name: '🔌 Electro' },
+    { id: 'f4', name: 'Aceite Vegetal 5L', price: 18.50, image_url: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=400&h=300', category_name: '🥫 Despensa' }
   ];
 
   const displayProducts = (products?.length > 0) ? products : fallbackProducts;
+  const displayCategories = (categories?.length > 0) ? categories : fullHierarchyFallback;
 
   return (
     <div className="authenticated-home-grid">
@@ -211,12 +281,12 @@ const AuthenticatedHome = () => {
             <span>CATEGORÍAS</span>
             {loadingCats && <Loader2 className="animate-spin" size={14} />}
           </div>
-          <div style={{ padding: '0.25rem 0', maxHeight: '580px', overflowY: 'auto' }}>
+          <div style={{ padding: '0.25rem 0', maxHeight: '720px', overflowY: 'auto' }}>
             {loadingCats ? (
               <div style={{ padding: '1.5rem', textAlign: 'center' }}>
                 <Loader2 className="animate-spin" size={24} color="#cbd5e1" style={{ margin: '0 auto' }} />
               </div>
-            ) : categories.map((cat) => {
+            ) : displayCategories.map((cat) => {
               const isOpen = !!openCategories[cat.id];
               const isActive = activeCategory?.id === cat.id;
               return (
@@ -225,7 +295,7 @@ const AuthenticatedHome = () => {
                     <button 
                       type="button" 
                       onClick={() => handleCategoryClick(cat)}
-                      style={{ flexGrow: 1, padding: '0.75rem 0.5rem 0.75rem 1.1rem', color: isActive ? '#0b2e59' : '#1e293b', background: 'none', border: 'none', fontSize: '0.9rem', cursor: 'pointer', textAlign: 'left', fontWeight: isActive ? 700 : 600 }}
+                      style={{ flexGrow: 1, padding: '0.75rem 0.5rem 0.75rem 1.1rem', color: isActive ? '#0b2e59' : '#1e293b', background: 'none', border: 'none', fontSize: '0.85rem', cursor: 'pointer', textAlign: 'left', fontWeight: isActive ? 700 : 600, display: 'flex', alignItems: 'center', gap: '8px' }}
                     >
                       {cat.name}
                     </button>
@@ -241,7 +311,11 @@ const AuthenticatedHome = () => {
                   {isOpen && cat.subcategories?.length > 0 && (
                     <div style={{ padding: '0 0 0.5rem', backgroundColor: '#fafafa' }}>
                       {cat.subcategories.map((child) => (
-                        <Link key={child.id} to={`/catalogo?cat=${encodeURIComponent(cat.slug)}&sub=${encodeURIComponent(child.slug)}`} style={{ display: 'block', padding: '0.4rem 1.1rem 0.4rem 2.2rem', color: '#64748b', textDecoration: 'none', fontSize: '0.85rem', fontWeight: 500 }}>
+                        <Link 
+                          key={child.id} 
+                          to={`/catalogo?cat=${encodeURIComponent(cat.slug)}&sub=${encodeURIComponent(child.slug)}`} 
+                          style={{ display: 'block', padding: '0.4rem 1.1rem 0.4rem 2.2rem', color: '#64748b', textDecoration: 'none', fontSize: '0.82rem', fontWeight: 500 }}
+                        >
                           {child.name}
                         </Link>
                       ))}
@@ -308,7 +382,7 @@ const AuthenticatedHome = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4" style={{ marginTop: '3rem' }}>
           <div style={{ backgroundColor: '#0b2e59', color: 'white', padding: '1.25rem', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '1rem', boxShadow: '0 8px 20px -8px rgba(11,46,89,0.3)' }}>
             <div style={{ backgroundColor: 'rgba(255,255,255,0.1)', padding: '0.6rem', borderRadius: '12px' }}>
-              <Truck size={20} color="#var(--color-accent)" />
+              <Truck size={20} color="var(--color-accent)" />
             </div>
             <div>
               <h4 style={{ fontWeight: 700, fontSize: '0.85rem', marginBottom: '2px' }}>Entregas desde 7 días</h4>

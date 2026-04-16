@@ -154,3 +154,110 @@ export async function deleteAdminProduct(productId) {
     return { ok: false, error: 'Network error' };
   }
 }
+
+export async function patchAdminProduct(productId, patchData) {
+  try {
+    const response = await fetch('/api/admin/products', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: productId, ...patchData })
+    });
+    return await response.json();
+  } catch (error) {
+    return { ok: false, error: 'Network error' };
+  }
+}
+
+// Categories Admin
+export async function getAdminCategories() {
+  try {
+    const response = await fetch('/api/admin/categories');
+    return await response.json();
+  } catch (error) {
+    return { ok: false, error: 'Network error' };
+  }
+}
+
+export async function createAdminCategory(data) {
+  try {
+    const response = await fetch('/api/admin/categories', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return await response.json();
+  } catch (error) {
+    return { ok: false, error: 'Network error' };
+  }
+}
+
+export async function updateAdminCategory(data) {
+  try {
+    const response = await fetch('/api/admin/categories', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return await response.json();
+  } catch (error) {
+    return { ok: false, error: 'Network error' };
+  }
+}
+
+export async function deleteAdminCategory(id) {
+  try {
+    const response = await fetch(`/api/admin/categories?id=${id}`, {
+      method: 'DELETE'
+    });
+    return await response.json();
+  } catch (error) {
+    return { ok: false, error: 'Network error' };
+  }
+}
+
+// Subcategories Admin
+export async function getAdminSubcategories() {
+  try {
+    const response = await fetch('/api/admin/subcategories');
+    return await response.json();
+  } catch (error) {
+    return { ok: false, error: 'Network error' };
+  }
+}
+
+export async function createAdminSubcategory(data) {
+  try {
+    const response = await fetch('/api/admin/subcategories', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return await response.json();
+  } catch (error) {
+    return { ok: false, error: 'Network error' };
+  }
+}
+
+export async function updateAdminSubcategory(data) {
+  try {
+    const response = await fetch('/api/admin/subcategories', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return await response.json();
+  } catch (error) {
+    return { ok: false, error: 'Network error' };
+  }
+}
+
+export async function deleteAdminSubcategory(id) {
+  try {
+    const response = await fetch(`/api/admin/subcategories?id=${id}`, {
+      method: 'DELETE'
+    });
+    return await response.json();
+  } catch (error) {
+    return { ok: false, error: 'Network error' };
+  }
+}

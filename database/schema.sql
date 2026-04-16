@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS categories (
   slug TEXT NOT NULL UNIQUE,
   image_url TEXT,
   display_order INTEGER DEFAULT 0,
+  status TEXT NOT NULL DEFAULT 'active',
   created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -51,6 +52,7 @@ CREATE TABLE IF NOT EXISTS subcategories (
   name TEXT NOT NULL,
   slug TEXT NOT NULL,
   display_order INTEGER DEFAULT 0,
+  status TEXT NOT NULL DEFAULT 'active',
   created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
 );

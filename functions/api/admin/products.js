@@ -92,6 +92,40 @@ export async function onRequest(context) {
     }
   }
 
+  // PATCH: Partial update for Quick Inventory
+  if (request.method === 'PATCH') {
+    try {
+      const body = await request.json();
+      const { id, stock, status } = body;
+      
+      if (!id) return json({ ok: false, error: 'ID requerido' }, 400);
+
+      const updates = [];
+      const values = [];
+      
+      if (stock !== undefined) {
+        updates.push('stock = ?');
+        values.push(stock);
+      }
+      if (status !== undefined) {
+        updates.push('status = ?');
+        values.push(status);
+      }
+      
+      if (updates.length > 0) {
+        values.push(id);
+        await env.mercacuba_store
+          .prepare(`UPDATE products SET ${updates.join(', ')}, updated_at = CURRENT_TIMESTAMP WHERE id = ?`)
+          .bind(...values)
+          .run();
+      }
+
+      return json({ ok: true });
+    } catch (e) {
+      return json({ ok: false, error: 'Error en actualización rápida', detail: e.message }, 500);
+    }
+  }
+
   // DELETE: Soft delete (set status inactive)
   if (request.method === 'DELETE') {
     try {
