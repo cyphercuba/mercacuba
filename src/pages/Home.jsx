@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Truck, MessageCircle, Tag, DollarSign, ChevronDown, ChevronRight, ShieldCheck, Clock, Lock } from 'lucide-react';
+import { Truck, MessageCircle, Tag, DollarSign, ChevronDown, ChevronRight, ShieldCheck, Clock, Lock, ArrowRight, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { getCategories, getProducts } from '../lib/catalog';
+import ProductCard from '../components/ProductCard';
 
 const publicCatalogCats = [
   { id: 'alimentos', name: 'Alimentos', image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=200&h=200&q=80' },
@@ -14,32 +16,7 @@ const publicCatalogCats = [
   { id: 'otros', name: 'Más', image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=200&h=200&q=80' },
 ];
 
-const categoryTree = [
-  { id: 'despensa', name: '🥫 Despensa', children: ['Conservas', 'Aceites y salsas', 'Café e infusiones', 'Granos y legumbres', 'Galletas', 'Panadería', 'Confituras'] },
-  { id: 'huevos-lacteos', name: '🥚 Huevos y Lácteos', children: ['Huevos', 'Lácteos'] },
-  { id: 'carnicos', name: '🥩 Cárnicos', children: ['Carne de res', 'Cerdo', 'Pollo', 'Cordero (Carnero)', 'Embutidos', 'Cárnicos varios'] },
-  { id: 'dulces-helados', name: '🍰 Dulces y Helados', children: ['Cakes y tartas', 'Helados', 'Dulces caseros'] },
-  { id: 'aseo-cuidado', name: '🧴 Aseo y Cuidado Personal', children: ['Productos de aseo', 'Perfumes'] },
-  { id: 'cenas-bufets', name: '🍽️ Cenas y Bufets', children: ['Comidas preparadas', 'Catering / Bufet'] },
-  { id: 'electrodomesticos', name: '🔌 Electrodomésticos', children: ['Cocina', 'Refrigeración', 'Lavado', 'Pequeños electrodomésticos'] },
-  { id: 'pescados-mariscos', name: '🐟 Pescados y Mariscos', children: ['Pescados', 'Mariscos'] },
-  { id: 'bebidas', name: '🥤 Bebidas', children: ['Refrescos', 'Jugos', 'Bebidas alcohólicas', 'Agua'] },
-  { id: 'de-agro', name: '🌾 De Agro', children: ['Viandas', 'Vegetales', 'Frutas'] },
-  { id: 'farmacia', name: '💊 Farmacia', children: ['Medicamentos', 'Vitaminas', 'Productos médicos'] },
-  { id: 'ferreteria', name: '🔧 Ferretería', children: ['Herramientas', 'Materiales de construcción'] },
-  { id: 'preelaborados', name: '🍕 Alimentos Preelaborados', children: ['Pizzas', 'Comida rápida', 'Congelados'] },
-  { id: 'limpieza-utiles', name: '🧼 Limpieza y Útiles', children: ['Productos de limpieza', 'Utensilios del hogar'] },
-  { id: 'regalos', name: '🎁 Regalos', children: ['Regalos para hombre', 'Regalos para mujer', 'Regalos para niños/as', 'Flores'] },
-  { id: 'piezas-accesorios', name: '🛠️ Piezas y Accesorios', children: ['Repuestos', 'Accesorios varios'] },
-  { id: 'hogar-mobiliario', name: '🛋️ Hogar y Mobiliario', children: ['Muebles', 'Decoración'] },
-  { id: 'infantiles-escolares', name: '🎒 Infantiles y Escolares', children: ['Útiles escolares', 'Productos infantiles'] },
-  { id: 'moda-accesorios', name: '👕 Moda y Accesorios', children: ['Ropa', 'Accesorios'] },
-  { id: 'bebe', name: '👶 Bebé', children: ['Productos para bebé'] },
-  { id: 'otros', name: '📦 Otros', children: ['Otros productos', 'Congelados y refrigerados'] },
-];
-
 const priceRanges = ['Menos de US$25', 'US$25 a US$50', 'US$50 a US$100', 'US$100 a US$250', 'Más de US$250'];
-const discountOptions = ['Ofertas del día', 'Combos con descuento', 'Entrega rápida', 'Mayorista'];
 
 const filterCardStyle = {
   backgroundColor: 'white',
@@ -137,37 +114,117 @@ const PublicHome = () => (
 );
 
 const AuthenticatedHome = () => {
-  const [openCategories, setOpenCategories] = useState({
-    despensa: true,
-    'huevos-lacteos': true,
-    carnicos: true,
-    'dulces-helados': false,
-    'aseo-cuidado': false,
-  });
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [loadingCats, setLoadingCats] = useState(true);
+  const [loadingProds, setLoadingProds] = useState(true);
+  const [activeCategory, setActiveCategory] = useState(null);
+  const [openCategories, setOpenCategories] = useState({});
+
+  useEffect(() => {
+    async function loadInitialData() {
+      setLoadingCats(true);
+      try {
+        const catRes = await getCategories();
+        if (catRes.ok) {
+          setCategories(catRes.categories);
+          const initialOpen = {};
+          catRes.categories.slice(0, 3).forEach(c => {
+            if (c.subcategories?.length > 0) initialOpen[c.id] = true;
+          });
+          setOpenCategories(initialOpen);
+        }
+      } catch (err) {
+        console.error("Error loading categories", err);
+      } finally {
+        setLoadingCats(false);
+      }
+
+      setLoadingProds(true);
+      try {
+        const prodRes = await getProducts({ featured: true, limit: 8 });
+        if (prodRes.ok) {
+          setProducts(prodRes.products);
+        }
+      } catch (err) {
+        console.error("Error loading products", err);
+      } finally {
+        setLoadingProds(false);
+      }
+    }
+    loadInitialData();
+  }, []);
 
   const toggleCategory = (id) => {
     setOpenCategories((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const handleCategoryClick = async (category) => {
+    setActiveCategory(category);
+    setLoadingProds(true);
+    try {
+      const prodRes = await getProducts({ category: category.slug, limit: 12 });
+      if (prodRes.ok) {
+        setProducts(prodRes.products);
+      }
+    } catch (err) {
+      console.error("Error loading category products", err);
+    } finally {
+      setLoadingProds(false);
+    }
+  };
+
+  const clearFilter = async () => {
+    setActiveCategory(null);
+    setLoadingProds(true);
+    try {
+      const prodRes = await getProducts({ featured: true, limit: 8 });
+      if (prodRes.ok) {
+        setProducts(prodRes.products);
+      }
+    } catch (err) {
+      console.error("Error resetting filters", err);
+    } finally {
+      setLoadingProds(false);
+    }
   };
 
   return (
     <div className="home-market-layout" style={{ display: 'grid', gridTemplateColumns: '270px minmax(0, 1fr)', gap: '0.9rem', alignItems: 'start' }}>
       <aside className="home-categories-sidebar" style={{ display: 'grid', gap: '1rem', position: 'sticky', top: '56px' }}>
         <div style={filterCardStyle}>
-          <div style={{ backgroundColor: '#0b2e59', color: 'white', padding: '1rem 1.1rem', fontWeight: 800, fontSize: '1rem' }}>Categorías</div>
+          <div style={{ backgroundColor: '#0b2e59', color: 'white', padding: '1rem 1.1rem', fontWeight: 800, fontSize: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span>Categorías</span>
+            {loadingCats && <Loader2 className="animate-spin" size={16} />}
+          </div>
           <div style={{ padding: '0.35rem 0', maxHeight: '620px', overflowY: 'auto' }}>
-            {categoryTree.map((cat) => {
+            {categories.map((cat) => {
               const isOpen = !!openCategories[cat.id];
+              const isActive = activeCategory?.id === cat.id;
               return (
                 <div key={cat.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <button type="button" onClick={() => toggleCategory(cat.id)} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', padding: '0.82rem 1.1rem', color: '#0f172a', background: 'none', border: 'none', fontSize: '0.95rem', cursor: 'pointer', textAlign: 'left' }}>
-                    <span>{cat.name}</span>
-                    {isOpen ? <ChevronDown size={16} color="#64748b" /> : <ChevronRight size={16} color="#64748b" />}
-                  </button>
-                  {isOpen && cat.children?.length > 0 && (
-                    <div style={{ padding: '0 0 0.5rem' }}>
-                      {cat.children.map((child) => (
-                        <Link key={child} to={`/catalogo?cat=${encodeURIComponent(cat.id)}&sub=${encodeURIComponent(child)}`} style={{ display: 'block', padding: '0.4rem 1.1rem 0.4rem 2.2rem', color: '#475569', textDecoration: 'none', fontSize: '0.9rem' }}>
-                          {child}
+                  <div style={{ display: 'flex', alignItems: 'center', backgroundColor: isActive ? '#f8fafc' : 'transparent' }}>
+                    <button 
+                      type="button" 
+                      onClick={() => handleCategoryClick(cat)}
+                      style={{ flexGrow: 1, padding: '0.82rem 0 0.82rem 1.1rem', color: isActive ? '#0b2e59' : '#0f172a', background: 'none', border: 'none', fontSize: '0.95rem', cursor: 'pointer', textAlign: 'left', fontWeight: isActive ? 700 : 500 }}
+                    >
+                      {cat.name}
+                    </button>
+                    {cat.subcategories?.length > 0 && (
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); toggleCategory(cat.id); }}
+                        style={{ padding: '0.82rem 1.1rem', background: 'none', border: 'none', cursor: 'pointer' }}
+                      >
+                        {isOpen ? <ChevronDown size={16} color="#64748b" /> : <ChevronRight size={16} color="#64748b" />}
+                      </button>
+                    )}
+                  </div>
+                  {isOpen && cat.subcategories?.length > 0 && (
+                    <div style={{ padding: '0 0 0.5rem', backgroundColor: '#fdfdfd' }}>
+                      {cat.subcategories.map((child) => (
+                        <Link key={child.id} to={`/catalogo?cat=${encodeURIComponent(cat.slug)}&sub=${encodeURIComponent(child.slug)}`} style={{ display: 'block', padding: '0.4rem 1.1rem 0.4rem 2.2rem', color: '#475569', textDecoration: 'none', fontSize: '0.9rem' }}>
+                          {child.name}
                         </Link>
                       ))}
                     </div>
@@ -191,41 +248,79 @@ const AuthenticatedHome = () => {
             ))}
           </div>
         </div>
-
-        <div style={filterCardStyle}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '1rem 1.1rem', borderBottom: '1px solid #f1f5f9', fontWeight: 800, color: '#0f172a' }}>
-            <Tag size={18} /> Ofertas y descuentos
-          </div>
-          <div style={{ padding: '0.5rem 1.1rem 0.9rem' }}>
-            {discountOptions.map((option) => (
-              <label key={option} style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', padding: '0.45rem 0', fontSize: '0.92rem', color: '#334155', cursor: 'pointer' }}>
-                <input type="checkbox" style={{ accentColor: '#0b2e59' }} />
-                {option}
-              </label>
-            ))}
-          </div>
-        </div>
       </aside>
 
-      <div style={{ minHeight: '600px', backgroundColor: 'white', border: '1px solid #e2e8f0', borderRadius: '16px', boxShadow: '0 10px 30px rgba(15, 23, 42, 0.05)', padding: '1.5rem' }}>
-        <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.6rem' }}>Explora la tienda</h2>
-        <p style={{ color: '#64748b', marginBottom: '1.5rem' }}>
-          Selecciona una categoría a la izquierda para ir cargando productos y resultados en esta área central.
-        </p>
+      <div className="home-main-content" style={{ minHeight: '600px' }}>
+        {/* Mobile Categories Nav */}
+        <div className="home-categories-mobile-nav" style={{ display: 'none' }}>
+           <button 
+              onClick={clearFilter}
+              className={`home-category-pill ${!activeCategory ? 'active' : ''}`}
+            >
+              Destacados
+            </button>
+            {categories.map(cat => (
+              <button 
+                key={cat.id} 
+                onClick={() => handleCategoryClick(cat)}
+                className={`home-category-pill ${activeCategory?.id === cat.id ? 'active' : ''}`}
+              >
+                {cat.name}
+              </button>
+            ))}
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div style={{ backgroundColor: '#1e3050', color: 'white', padding: 'var(--spacing-4)', borderRadius: 'var(--border-radius)', display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)' }}>
-            <Truck size={24} color="#4ade80" />
+        <div style={{ backgroundColor: 'white', border: '1px solid #e2e8f0', borderRadius: '16px', boxShadow: '0 10px 30px rgba(15, 23, 42, 0.05)', padding: '1.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
             <div>
-              <h4 style={{ fontWeight: 600, fontSize: '0.9rem' }}>Entregas desde 7 días</h4>
-              <p style={{ fontSize: '0.75rem', opacity: 0.8 }}>según la provincia</p>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.2rem' }}>
+                {activeCategory ? activeCategory.name : 'Productos Destacados'}
+              </h2>
+              <p style={{ color: '#64748b', fontSize: '0.9rem' }}>
+                {activeCategory ? `Mostrando productos en ${activeCategory.name}` : 'Seleccionados especialmente para ti'}
+              </p>
             </div>
+            {activeCategory && (
+              <button onClick={clearFilter} style={{ fontSize: '0.85rem', color: '#0b2e59', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}>
+                Ver todos los destacados
+              </button>
+            )}
           </div>
-          <div style={{ backgroundColor: '#064e3b', color: 'white', padding: 'var(--spacing-4)', borderRadius: 'var(--border-radius)', display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)' }}>
-            <MessageCircle size={24} color="#4ade80" />
-            <div>
-              <h4 style={{ fontWeight: 600, fontSize: '0.9rem' }}>Atención por WhatsApp</h4>
-              <p style={{ fontSize: '0.75rem', opacity: 0.8 }}>Escríbenos ahora</p>
+
+          {loadingProds ? (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '5rem 0', gap: '1rem' }}>
+              <Loader2 className="animate-spin" size={40} color="#0b2e59" />
+              <p style={{ color: '#64748b', fontWeight: 500 }}>Cargando productos...</p>
+            </div>
+          ) : products.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {products.map(product => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          ) : (
+            <div style={{ textAlign: 'center', padding: '5rem 2rem', backgroundColor: '#f8fafc', borderRadius: '12px' }}>
+              <Tag size={48} color="#94a3b8" style={{ marginBottom: '1rem', opacity: 0.5 }} />
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#475569' }}>No hay productos</h3>
+              <p style={{ color: '#64748b', fontSize: '0.9rem' }}>Actualmente no tenemos productos en esta sección.</p>
+            </div>
+          )}
+
+          {/* Info banners */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4" style={{ marginTop: '3rem' }}>
+            <div style={{ backgroundColor: '#1e3050', color: 'white', padding: 'var(--spacing-4)', borderRadius: 'var(--border-radius)', display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)' }}>
+              <Truck size={24} color="#4ade80" />
+              <div>
+                <h4 style={{ fontWeight: 600, fontSize: '0.9rem' }}>Entregas desde 7 días</h4>
+                <p style={{ fontSize: '0.75rem', opacity: 0.8 }}>según la provincia</p>
+              </div>
+            </div>
+            <div style={{ backgroundColor: '#064e3b', color: 'white', padding: 'var(--spacing-4)', borderRadius: 'var(--border-radius)', display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)' }}>
+              <MessageCircle size={24} color="#4ade80" />
+              <div>
+                <h4 style={{ fontWeight: 600, fontSize: '0.9rem' }}>Atención por WhatsApp</h4>
+                <p style={{ fontSize: '0.75rem', opacity: 0.8 }}>Escríbenos ahora</p>
+              </div>
             </div>
           </div>
         </div>
@@ -236,7 +331,6 @@ const AuthenticatedHome = () => {
 
 const Home = () => {
   const { user } = useAuth();
-
   return <div>{user ? <AuthenticatedHome /> : <PublicHome />}</div>;
 };
 

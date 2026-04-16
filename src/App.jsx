@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Navbar from './components/Layout/Navbar';
 import Sidebar from './components/Layout/Sidebar';
 import BottomNav from './components/Layout/BottomNav';
@@ -16,12 +16,14 @@ import CompraMayorista from './pages/CompraMayorista';
 import Combos from './pages/Combos';
 import Membresias from './pages/Membresias';
 import MiCuenta from './pages/MiCuenta';
+import AdminDashboard from './pages/Admin/Dashboard';
 import { useAuth } from './context/AuthContext';
 
 function AppLayout() {
   const location = useLocation();
   const { user } = useAuth();
-  const hideSidebar = user && (location.pathname === '/cuenta' || location.pathname === '/registro');
+  const isAdminPath = location.pathname.startsWith('/admin');
+  const hideSidebar = (user && (location.pathname === '/mi-cuenta' || location.pathname === '/registro')) || isAdminPath;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
@@ -40,8 +42,9 @@ function AppLayout() {
             <Route path="/registro" element={<Login />} />
             <Route path="/mayorista-mipymes" element={<CompraMayorista />} />
             <Route path="/combos" element={<Combos />} />
-            <Route path="/membresias" element={<Membresias />} />
+             <Route path="/membresias" element={<Membresias />} />
             <Route path="/mi-cuenta" element={<MiCuenta />} />
+            <Route path="/admin" element={user?.role === 'admin' ? <AdminDashboard /> : <Navigate to="/cuenta" />} />
             <Route path="*" element={<div style={{ padding: 'var(--spacing-8) 0', minHeight: '60vh' }}><h1>Página en construcción</h1></div>} />
           </Routes>
         </main>

@@ -827,3 +827,51 @@ img {
     font-size: 2.5rem !important;
   }
 }
+
+/* Shop Layout Mobile Enhancements */
+@media (max-width: 768px) {
+  .home-market-layout {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+
+  .home-categories-sidebar {
+    position: static !important;
+    display: none !important;
+  }
+
+  .home-categories-mobile-nav {
+    display: flex;
+    overflow-x: auto;
+    gap: 0.75rem;
+    padding: 0.5rem 0.25rem;
+    margin-bottom: 1rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .home-categories-mobile-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .home-category-pill {
+    white-space: nowrap;
+    padding: 0.6rem 1.1rem;
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 99px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #0b2e59;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    cursor: pointer;
+  }
+  
+  .home-category-pill.active {
+    background-color: #0b2e59;
+    color: white;
+    border-color: #0b2e59;
+    box-shadow: 0 4px 6px rgba(9, 46, 92, 0.15);
+  }
+}
+

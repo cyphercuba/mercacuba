@@ -1,0 +1,149 @@
+import React from 'react';
+import { ShoppingCart, Plus, Minus } from 'lucide-react';
+import { useCart } from '../context/CartContext';
+
+const ProductCard = ({ product }) => {
+  const { addToCart, cart, updateQuantity } = useCart();
+  
+  const cartItem = cart.find(item => item.id === product.id);
+  const quantity = cartItem ? cartItem.quantity : 0;
+
+  const handleAdd = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart(product);
+  };
+
+  const handleIncrement = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    updateQuantity(product.id, quantity + 1);
+  };
+
+  const handleDecrement = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (quantity > 1) {
+      updateQuantity(product.id, quantity - 1);
+    } else {
+      // In a real app we might remove from cart here or just keep at 1
+    }
+  };
+
+  const displayPrice = product.sale_price || product.price;
+  const hasDiscount = !!product.sale_price;
+
+  return (
+    <div className="product-card" style={{ 
+      backgroundColor: 'white', 
+      border: '1px solid #e2e8f0', 
+      borderRadius: '16px', 
+      overflow: 'hidden',
+      transition: 'transform 0.2s, box-shadow 0.2s',
+      position: 'relative',
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%'
+    }}>
+      {hasDiscount && (
+        <div style={{ 
+          position: 'absolute', 
+          top: '12px', 
+          right: '12px', 
+          backgroundColor: '#ef4444', 
+          color: 'white', 
+          padding: '2px 8px', 
+          borderRadius: '20px', 
+          fontSize: '0.7rem', 
+          fontWeight: 700,
+          zIndex: 1
+        }}>
+          OFERTA
+        </div>
+      )}
+      
+      <div style={{ 
+        width: '100%', 
+        aspectRatio: '1/1', 
+        backgroundColor: '#f8fafc', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        padding: '1rem',
+        overflow: 'hidden'
+      }}>
+        <img 
+          src={product.image_url || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=300&h=300&q=80'} 
+          alt={product.name} 
+          style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+        />
+      </div>
+
+      <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+        <span style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 600, marginBottom: '0.25rem' }}>
+          {product.category_name}
+        </span>
+        <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.5rem', lineHeight: '1.4', minHeight: '2.8rem' }}>
+          {product.name}
+        </h3>
+        
+        <div style={{ marginTop: 'auto' }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', marginBottom: '1rem' }}>
+            <span style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0b2e59' }}>
+              US${displayPrice.toFixed(2)}
+            </span>
+            {hasDiscount && (
+              <span style={{ fontSize: '0.85rem', color: '#94a3b8', textDecoration: 'line-through' }}>
+                US${product.price.toFixed(2)}
+              </span>
+            )}
+          </div>
+
+          {quantity > 0 ? (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#f1f5f9', borderRadius: '12px', padding: '0.35rem' }}>
+              <button 
+                onClick={handleDecrement}
+                style={{ background: 'white', border: 'none', borderRadius: '8px', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#0b2e59', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}
+              >
+                <Minus size={16} />
+              </button>
+              <span style={{ fontWeight: 700, color: '#0f172a' }}>{quantity}</span>
+              <button 
+                onClick={handleIncrement}
+                style={{ background: '#0b2e59', border: 'none', borderRadius: '8px', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
+              >
+                <Plus size={16} />
+              </button>
+            </div>
+          ) : (
+            <button 
+              onClick={handleAdd}
+              className="btn-add-to-cart"
+              style={{ 
+                width: '100%', 
+                backgroundColor: '#0b2e59', 
+                color: 'white', 
+                border: 'none', 
+                borderRadius: '12px', 
+                padding: '0.75rem', 
+                fontWeight: 700, 
+                fontSize: '0.85rem',
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                gap: '0.5rem',
+                cursor: 'pointer',
+                transition: 'background-color 0.2s'
+              }}
+            >
+              <ShoppingCart size={18} />
+              Añadir
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ProductCard;
