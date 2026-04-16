@@ -34,10 +34,17 @@ const AdminDashboard = () => {
   const [modalType, setModalType] = useState(null); // 'prod_add', 'prod_edit', 'cat_add', 'cat_edit', 'sub_add', 'sub_edit'
   const [editData, setEditData] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formCategoryId, setFormCategoryId] = useState('');
 
   useEffect(() => {
     loadAll();
   }, []);
+
+  useEffect(() => {
+    if (modalType?.startsWith('prod')) {
+      setFormCategoryId(editData?.category_id || (categories.length > 0 ? categories[0].id : ''));
+    }
+  }, [modalType, editData, categories]);
 
   const loadAll = async () => {
     setLoading(true);
@@ -334,16 +341,14 @@ const AdminDashboard = () => {
                       </button>
                     </td>
                     <td style={{ padding: '1rem', textAlign: 'right' }}>
-                       <button 
-                        onClick={() => updateProductStatus(p.id, p.status === 'active' ? 'inactive' : 'active')}
-                        style={{ background: 'none', border: 'none', fontWeight: 800, color: '#0b2e59', fontSize: '0.8rem', cursor: 'pointer' }}
-                       >
-                         {p.stock <= 0 ? (
-                           <span style={{ color: '#ef4444' }}>Agotado</span>
-                         ) : (
-                           <span style={{ color: '#10b981' }}>Disponible</span>
-                         )}
-                       </button>
+                       <div style={{ 
+                         display: 'inline-flex', padding: '4px 12px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 800,
+                         backgroundColor: p.stock > 0 ? '#ecfdf5' : '#fff1f2',
+                         color: p.stock > 0 ? '#059669' : '#e11d48',
+                         border: `1px solid ${p.stock > 0 ? '#10b98120' : '#f43f5e20'}`
+                       }}>
+                         {p.stock > 0 ? 'DISPONIBLE' : 'AGOTADO'}
+                       </div>
                     </td>
                   </tr>
                 );
@@ -368,15 +373,36 @@ const AdminDashboard = () => {
               </div>
               <div>
                 <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '0.4rem' }}>Categoría</label>
-                <select name="categoryId" defaultValue={editData?.category_id} required style={{ width: '100%', padding: '0.8rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                <select 
+                  name="categoryId" 
+                  value={formCategoryId}
+                  onChange={(e) => setFormCategoryId(e.target.value)}
+                  required 
+                  style={{ width: '100%', padding: '0.8rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}
+                >
+                  <option value="" disabled>Seleccionar...</option>
                   {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
               </div>
               <div>
                 <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '0.4rem' }}>Sub-Cat (Opcional)</label>
-                <select name="subcategoryId" defaultValue={editData?.subcategory_id} style={{ width: '100%', padding: '0.8rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                <select 
+                  name="subcategoryId" 
+                  defaultValue={editData?.subcategory_id} 
+                  style={{ 
+                    width: '100%', 
+                    padding: '0.8rem', 
+                    borderRadius: '10px', 
+                    border: '1px solid #e2e8f0',
+                    backgroundColor: subcategories.filter(s => s.category_id === formCategoryId).length === 0 ? '#f8fafc' : 'white'
+                  }}
+                  disabled={subcategories.filter(s => s.category_id === formCategoryId).length === 0}
+                >
                   <option value="">Ninguna</option>
-                  {subcategories.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                  {subcategories
+                    .filter(s => s.category_id === formCategoryId)
+                    .map(s => <option key={s.id} value={s.id}>{s.name}</option>)
+                  }
                 </select>
               </div>
               <div>

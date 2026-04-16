@@ -19,7 +19,7 @@ const ProductCard = ({ product }) => {
         id: product.id,
         name: product.name,
         price: product.sale_price || product.price,
-        image: product.image_url || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=300&h=300&q=80',
+        image: product.image_url,
         quantity: 1
       });
     }
@@ -48,28 +48,30 @@ const ProductCard = ({ product }) => {
     <div className="product-card" style={{ 
       backgroundColor: 'white', 
       border: '1px solid #e2e8f0', 
-      borderRadius: '16px', 
+      borderRadius: '24px', 
       overflow: 'hidden',
-      transition: 'transform 0.2s, box-shadow 0.2s',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       position: 'relative',
       display: 'flex',
       flexDirection: 'column',
-      height: '100%'
+      height: '100%',
+      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.02)'
     }}>
       {hasDiscount && (
         <div style={{ 
           position: 'absolute', 
           top: '12px', 
-          right: '12px', 
+          left: '12px', 
           backgroundColor: '#ef4444', 
           color: 'white', 
-          padding: '2px 8px', 
-          borderRadius: '20px', 
+          padding: '4px 10px', 
+          borderRadius: '10px', 
           fontSize: '0.7rem', 
-          fontWeight: 700,
-          zIndex: 1
+          fontWeight: 800,
+          zIndex: 1,
+          boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)'
         }}>
-          OFERTA
+          -{Math.round((1 - rawSalePrice/rawPrice) * 100)}%
         </div>
       )}
       
@@ -80,50 +82,59 @@ const ProductCard = ({ product }) => {
         display: 'flex', 
         alignItems: 'center', 
         justifyContent: 'center',
-        padding: '0.75rem',
-        overflow: 'hidden'
+        padding: '1.5rem',
+        overflow: 'hidden',
+        position: 'relative'
       }}>
         <img 
           src={product.image_url || '/logo.png'} 
           alt={product.name} 
-          style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', opacity: product.image_url ? 1 : 0.2 }}
+          style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', opacity: product.image_url ? 1 : 0.2, transform: 'scale(1.05)' }}
         />
       </div>
 
-      <div style={{ padding: '0.85rem', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-        <span style={{ fontSize: '0.65rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 600, marginBottom: '0.2rem' }}>
-          {product.category_name}
-        </span>
-        <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.4rem', lineHeight: '1.3', minHeight: '2.4rem' }}>
+      <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.4rem' }}>
+          <span style={{ fontSize: '0.65rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.05em' }}>
+            {product.category_name}
+          </span>
+          {product.stock > 0 && product.stock < 10 && (
+            <span style={{ fontSize: '0.65rem', color: '#e11d48', fontWeight: 800 }}>
+              Casi agotado
+            </span>
+          )}
+        </div>
+
+        <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#0b2e59', marginBottom: '0.75rem', lineHeight: '1.4', minHeight: '2.8rem' }}>
           {product.name}
         </h3>
         
         <div style={{ marginTop: 'auto' }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem', marginBottom: '0.8rem' }}>
-            <span style={{ fontSize: '1rem', fontWeight: 800, color: '#0b2e59' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.25rem' }}>
+            <span style={{ fontSize: '1.25rem', fontWeight: 900, color: '#0f172a' }}>
               US${displayPrice.toFixed(2)}
             </span>
             {hasDiscount && (
-              <span style={{ fontSize: '0.75rem', color: '#94a3b8', textDecoration: 'line-through' }}>
+              <span style={{ fontSize: '0.85rem', color: '#94a3b8', textDecoration: 'line-through' }}>
                 US${product.price.toFixed(2)}
               </span>
             )}
           </div>
 
           {quantity > 0 ? (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#f1f5f9', borderRadius: '10px', padding: '0.3rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#f1f5f9', borderRadius: '16px', padding: '0.4rem' }}>
               <button 
                 onClick={handleDecrement}
-                style={{ background: 'white', border: 'none', borderRadius: '6px', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#0b2e59', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}
+                style={{ background: 'white', border: 'none', borderRadius: '12px', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#0b2e59', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}
               >
-                <Minus size={14} />
+                <Minus size={16} />
               </button>
-              <span style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.85rem' }}>{quantity}</span>
+              <span style={{ fontWeight: 800, color: '#0b2e59', fontSize: '1rem' }}>{quantity}</span>
               <button 
                 onClick={handleIncrement}
-                style={{ background: '#0b2e59', border: 'none', borderRadius: '6px', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
+                style={{ background: '#0b2e59', border: 'none', borderRadius: '12px', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white', boxShadow: '0 4px 12px rgba(11, 46, 89, 0.2)' }}
               >
-                <Plus size={14} />
+                <Plus size={16} />
               </button>
             </div>
           ) : (
@@ -135,19 +146,19 @@ const ProductCard = ({ product }) => {
                 backgroundColor: '#0b2e59', 
                 color: 'white', 
                 border: 'none', 
-                borderRadius: '10px', 
-                padding: '0.6rem', 
-                fontWeight: 700, 
-                fontSize: '0.8rem',
+                borderRadius: '16px', 
+                padding: '0.85rem', 
+                fontWeight: 800, 
+                fontSize: '0.9rem',
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'center', 
-                gap: '0.4rem',
+                gap: '0.6rem',
                 cursor: 'pointer',
-                transition: 'background-color 0.2s'
+                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             >
-              <ShoppingCart size={16} />
+              <ShoppingCart size={18} />
               Añadir
             </button>
           )}

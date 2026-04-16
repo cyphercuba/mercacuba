@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart, Search, User, HelpCircle, Menu, X, Package, MapPin, LogOut } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
+import { useShop } from '../../context/ShopContext';
 
 const Navbar = () => {
   const { state } = useCart();
@@ -12,6 +13,7 @@ const Navbar = () => {
   const userMenuRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
+  const { location: selectedLocation, setIsLocationModalOpen } = useShop();
   const totalItems = state.items.reduce((acc, item) => acc + item.quantity, 0);
 
   const handleSearch = () => {
@@ -58,9 +60,9 @@ const Navbar = () => {
             </span>
           </Link>
 
-          {/* Desktop Search Bar */}
-          <div className="search-container" style={{ flex: 1, maxWidth: '600px', margin: '0 var(--spacing-8)' }}>
-            <div style={{ display: 'flex', border: '1px solid var(--color-border)', borderRadius: 'var(--border-radius)', overflow: 'hidden' }}>
+          {/* Desktop Search Bar & Location */}
+          <div className="search-container" style={{ flex: 1, maxWidth: '700px', margin: '0 var(--spacing-8)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ flex: 1, display: 'flex', border: '1px solid var(--color-border)', borderRadius: 'var(--border-radius)', overflow: 'hidden' }}>
               <input 
                 type="text" 
                 placeholder="Buscar productos, combos o tiendas..." 
@@ -73,6 +75,20 @@ const Navbar = () => {
                 <Search size={20} />
               </button>
             </div>
+
+            <button 
+              onClick={() => setIsLocationModalOpen(true)}
+              style={{ 
+                display: 'flex', alignItems: 'baseline', gap: '6px', background: '#f8fafc', border: '1px solid #e2e8f0', padding: '10px 14px', borderRadius: '12px', cursor: 'pointer', transition: 'all 0.2s', whiteSpace: 'nowrap'
+              }}
+              onMouseEnter={e => e.currentTarget.style.borderColor = '#0b2e59'}
+              onMouseLeave={e => e.currentTarget.style.borderColor = '#e2e8f0'}
+            >
+                <div style={{ fontSize: '0.65rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase' }}>Entrega en</div>
+                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0b2e59' }}>
+                  {selectedLocation ? `${selectedLocation.province}, ${selectedLocation.municipality}` : 'Seleccionar...'}
+                </div>
+            </button>
           </div>
 
           {/* Top Actions */}

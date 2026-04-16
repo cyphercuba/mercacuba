@@ -18,6 +18,9 @@ import Membresias from './pages/Membresias';
 import MiCuenta from './pages/MiCuenta';
 import AdminDashboard from './pages/Admin/Dashboard';
 import { useAuth } from './context/AuthContext';
+import { ShopProvider } from './context/Context';
+import LocationModal from './components/Modals/LocationModal';
+import WhatsAppFloating from './components/Support/WhatsAppFloating';
 
 function AppLayout() {
   const location = useLocation();
@@ -28,6 +31,8 @@ function AppLayout() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <LocationModal />
+      <WhatsAppFloating />
       <Navbar />
       <div className="container main-layout" style={{ flex: 1 }}>
         <main className="main-content">
@@ -59,9 +64,11 @@ function AppLayout() {
 
 function App() {
   return (
-    <Router>
-      <AppLayout />
-    </Router>
+    <ShopProvider>
+      <Router>
+        <AppLayout />
+      </Router>
+    </ShopProvider>
   );
 }
 
