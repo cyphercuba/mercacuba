@@ -3,7 +3,10 @@ import { ShoppingCart, Plus, Minus } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
 const ProductCard = ({ product }) => {
-  const { addToCart, cart, updateQuantity } = useCart();
+  if (!product) return null;
+  
+  const { state: cartState, addToCart, updateQuantity } = useCart();
+  const cart = cartState?.items || [];
   
   const cartItem = cart.find(item => item.id === product.id);
   const quantity = cartItem ? cartItem.quantity : 0;
@@ -11,27 +14,35 @@ const ProductCard = ({ product }) => {
   const handleAdd = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    addToCart(product);
+    if (product.id && product.price) {
+      addToCart({
+        id: product.id,
+        name: product.name,
+        price: product.sale_price || product.price,
+        image: product.image_url || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=300&h=300&q=80',
+        quantity: 1
+      });
+    }
   };
 
   const handleIncrement = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    updateQuantity(product.id, quantity + 1);
+    if (product.id) updateQuantity(product.id, quantity + 1);
   };
 
   const handleDecrement = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (quantity > 1) {
+    if (product.id && quantity > 0) {
       updateQuantity(product.id, quantity - 1);
-    } else {
-      // In a real app we might remove from cart here or just keep at 1
     }
   };
 
-  const displayPrice = product.sale_price || product.price;
-  const hasDiscount = !!product.sale_price;
+  const rawPrice = typeof product.price === 'number' ? product.price : 0;
+  const rawSalePrice = typeof product.sale_price === 'number' ? product.sale_price : null;
+  const displayPrice = rawSalePrice || rawPrice;
+  const hasDiscount = rawSalePrice !== null && rawSalePrice < rawPrice;
 
   return (
     <div className="product-card" style={{ 

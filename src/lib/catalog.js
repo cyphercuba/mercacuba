@@ -40,3 +40,117 @@ export async function getAddresses() {
     return { ok: false, error: 'Network error' };
   }
 }
+
+export async function createAddress(addressData) {
+  try {
+    const response = await fetch('/api/account/addresses', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(addressData)
+    });
+    return await response.json();
+  } catch (error) {
+    return { ok: false, error: 'Network error' };
+  }
+}
+
+export async function updateAddress(addressData) {
+  try {
+    const response = await fetch('/api/account/addresses', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(addressData)
+    });
+    return await response.json();
+  } catch (error) {
+    return { ok: false, error: 'Network error' };
+  }
+}
+
+export async function deleteAddress(addressId) {
+  try {
+    const response = await fetch(`/api/account/addresses?id=${addressId}`, {
+      method: 'DELETE'
+    });
+    return await response.json();
+  } catch (error) {
+    return { ok: false, error: 'Network error' };
+  }
+}
+
+export async function updateProfile(profileData) {
+  try {
+    const response = await fetch('/api/account/profile', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(profileData)
+    });
+    return await response.json();
+  } catch (error) {
+    return { ok: false, error: 'Network error' };
+  }
+}
+
+export async function getOrders() {
+  try {
+    const response = await fetch('/api/account/orders');
+    return await response.json();
+  } catch (error) {
+    return { ok: false, error: 'Network error' };
+  }
+}
+
+export async function getAdminStats() {
+  try {
+    const response = await fetch('/api/admin/stats');
+    return await response.json();
+  } catch (error) {
+    return { ok: false, error: 'Network error' };
+  }
+}
+
+export async function getAdminProducts() {
+  try {
+    const response = await fetch('/api/admin/products');
+    return await response.json();
+  } catch (error) {
+    return { ok: false, error: 'Network error' };
+  }
+}
+
+export async function createAdminProduct(productData) {
+  try {
+    const response = await fetch('/api/admin/products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(productData)
+    });
+    return await response.json();
+  } catch (error) {
+    return { ok: false, error: 'Network error' };
+  }
+}
+
+export async function updateAdminProduct(productData) {
+  try {
+    const response = await fetch('/api/admin/products', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(productData)
+    });
+    return await response.json();
+  } catch (error) {
+    return { ok: false, error: 'Network error' };
+  }
+}
+
+export async function deleteAdminProduct(productId) {
+  try {
+    const response = await fetch(`/api/admin/products?id=${productId}`, {
+      method: 'DELETE'
+    });
+    return await response.json();
+  } catch (error) {
+    return { ok: false, error: 'Network error' };
+  }
+}

@@ -35,6 +35,7 @@ export async function onRequest(context) {
 
   const userId = user.user_id;
 
+  // GET ALL ADDRESSES
   if (request.method === 'GET') {
     const addresses = await env.mercacuba_store
       .prepare('SELECT * FROM addresses WHERE user_id = ? ORDER BY is_default DESC, created_at DESC')
@@ -43,14 +44,19 @@ export async function onRequest(context) {
     return json({ ok: true, addresses: addresses.results });
   }
 
+  // CREATE ADDRESS
   if (request.method === 'POST') {
     const body = await request.json();
     const id = createId();
     const { 
-      label, recipientName, phone, country, province, city, municipality, addressLine1, addressLine2, isDefault 
+      label, recipientName, phone, country = 'Cuba', province, city, municipality, addressLine1, addressLine2, isDefault 
     } = body;
 
-    // If setting as default, unset others first
+    // Simple validation
+    if (!recipientName || !province || !addressLine1) {
+      return json({ ok: false, error: 'Campos obligatorios faltantes (Receptor, Provincia, Dirección)' }, 400);
+    }
+
     if (isDefault) {
       await env.mercacuba_store
         .prepare('UPDATE addresses SET is_default = 0 WHERE user_id = ?')
@@ -75,6 +81,61 @@ export async function onRequest(context) {
       return json({ ok: true, id }, 201);
     } catch (e) {
       return json({ ok: false, error: 'Error al crear la dirección', detail: e.message }, 500);
+    }
+  }
+
+  // UPDATE ADDRESS
+  if (request.method === 'PUT') {
+    const body = await request.json();
+    const { 
+      id, label, recipientName, phone, country, province, city, municipality, addressLine1, addressLine2, isDefault 
+    } = body;
+
+    if (!id) return json({ ok: false, error: 'ID de dirección requerido' }, 400);
+
+    if (isDefault) {
+      await env.mercacuba_store
+        .prepare('UPDATE addresses SET is_default = 0 WHERE user_id = ?')
+        .bind(userId)
+        .run();
+    }
+
+    try {
+      await env.mercacuba_store
+        .prepare(`
+          UPDATE addresses SET 
+            label = ?, recipient_name = ?, phone = ?, country = ?, province = ?, 
+            city = ?, municipality = ?, address_line_1 = ?, address_line_2 = ?, is_default = ?
+          WHERE id = ? AND user_id = ?
+        `)
+        .bind(
+          label, recipientName, phone, country, province, 
+          city, municipality, addressLine1, addressLine2, isDefault ? 1 : 0,
+          id, userId
+        )
+        .run();
+
+      return json({ ok: true });
+    } catch (e) {
+      return json({ ok: false, error: 'Error al actualizar la dirección', detail: e.message }, 500);
+    }
+  }
+
+  // DELETE ADDRESS
+  if (request.method === 'DELETE') {
+    const url = new URL(request.url);
+    const id = url.searchParams.get('id');
+
+    if (!id) return json({ ok: false, error: 'ID de dirección requerido' }, 400);
+
+    try {
+      await env.mercacuba_store
+        .prepare('DELETE FROM addresses WHERE id = ? AND user_id = ?')
+        .bind(id, userId)
+        .run();
+      return json({ ok: true });
+    } catch (e) {
+      return json({ ok: false, error: 'Error al eliminar la dirección', detail: e.message }, 500);
     }
   }
 
