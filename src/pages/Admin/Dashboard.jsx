@@ -8,6 +8,7 @@ import {
   getAdminCategories, createAdminCategory, updateAdminCategory, deleteAdminCategory,
   getAdminSubcategories, createAdminSubcategory, updateAdminSubcategory, deleteAdminSubcategory 
 } from '../../lib/catalog';
+import { fullHierarchyFallback } from '../../data/catalogFallback';
 
 const Modal = ({ title, children, onClose }) => (
   <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(15, 23, 42, 0.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, backdropFilter: 'blur(4px)', padding: '1rem' }}>
@@ -381,7 +382,7 @@ const AdminDashboard = () => {
                   style={{ width: '100%', padding: '0.8rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}
                 >
                   <option value="" disabled>Seleccionar...</option>
-                  {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                  {(categories.length > 0 ? categories : fullHierarchyFallback).map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
               </div>
               <div>
@@ -394,13 +395,18 @@ const AdminDashboard = () => {
                     padding: '0.8rem', 
                     borderRadius: '10px', 
                     border: '1px solid #e2e8f0',
-                    backgroundColor: subcategories.filter(s => s.category_id === formCategoryId).length === 0 ? '#f8fafc' : 'white'
+                    backgroundColor: (subcategories.length > 0 ? subcategories : fullHierarchyFallback.flatMap(c => c.subcategories || []))
+                      .filter(s => s.category_id === formCategoryId || (fullHierarchyFallback.find(cat => cat.id === formCategoryId)?.subcategories?.some(sub => sub.id === s.id)))
+                      .length === 0 ? '#f8fafc' : 'white'
                   }}
-                  disabled={subcategories.filter(s => s.category_id === formCategoryId).length === 0}
+                  disabled={
+                    (subcategories.length > 0 ? subcategories : fullHierarchyFallback.flatMap(c => c.subcategories || []))
+                      .filter(s => s.category_id === formCategoryId || (fullHierarchyFallback.find(cat => cat.id === formCategoryId)?.subcategories?.some(sub => sub.id === s.id)))
+                      .length === 0
+                  }
                 >
                   <option value="">Ninguna</option>
-                  {subcategories
-                    .filter(s => s.category_id === formCategoryId)
+                  {(subcategories.length > 0 ? subcategories : (fullHierarchyFallback.find(c => c.id === formCategoryId)?.subcategories || []))
                     .map(s => <option key={s.id} value={s.id}>{s.name}</option>)
                   }
                 </select>

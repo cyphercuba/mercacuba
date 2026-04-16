@@ -1,16 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Search, User, HelpCircle, Menu, X, Package, MapPin, LogOut } from 'lucide-react';
+import { ShoppingCart, Search, User, HelpCircle, Menu, X, Package, MapPin, LogOut, ChevronDown } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { useShop } from '../../context/ShopContext';
+import { fullHierarchyFallback } from '../../data/catalogFallback';
 
 const Navbar = () => {
   const { state } = useCart();
   const { user, signOut } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isCategoriesDropdownOpen, setIsCategoriesDropdownOpen] = useState(false);
   const userMenuRef = useRef(null);
+  const categoriesMenuRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
   const { location: selectedLocation, setIsLocationModalOpen } = useShop();
@@ -27,6 +30,9 @@ const Navbar = () => {
     const handleClickOutside = (event) => {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
         setIsUserMenuOpen(false);
+      }
+      if (categoriesMenuRef.current && !categoriesMenuRef.current.contains(event.target)) {
+        setIsCategoriesDropdownOpen(false);
       }
     };
 
@@ -151,29 +157,69 @@ const Navbar = () => {
         <div className="container flex justify-between items-center nav-overflow-mobile" style={{ height: '48px' }}>
           
           <div className="flex items-center gap-6">
+            {/* Categorías Dropdown */}
+            <div 
+              ref={categoriesMenuRef}
+              style={{ position: 'relative' }}
+              onMouseEnter={() => setIsCategoriesDropdownOpen(true)}
+              onMouseLeave={() => setIsCategoriesDropdownOpen(false)}
+            >
+              <button
+                onClick={() => setIsCategoriesDropdownOpen(!isCategoriesDropdownOpen)}
+                className="nav-link"
+                style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '4px', 
+                  background: 'none', 
+                  border: 'none', 
+                  cursor: 'pointer',
+                  fontWeight: 700,
+                  fontSize: 'inherit',
+                  color: 'white'
+                }}
+              >
+                Categorías <ChevronDown size={16} />
+              </button>
+              
+              {isCategoriesDropdownOpen && (
+                <div 
+                  className="glass-card" 
+                  style={{ 
+                    position: 'absolute', 
+                    top: '100%', 
+                    left: 0, 
+                    width: '320px', 
+                    padding: '1rem', 
+                    borderRadius: '16px', 
+                    boxShadow: '0 20px 50px rgba(0,0,0,0.3)',
+                    zIndex: 200,
+                    columns: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.5rem',
+                    maxHeight: '400px',
+                    overflowY: 'auto'
+                  }}
+                >
+                  {fullHierarchyFallback.map(cat => (
+                    <Link 
+                      key={cat.id} 
+                      to={`/catalogo?cat=${cat.slug}`} 
+                      className="cat-dropdown-item"
+                      onClick={() => setIsCategoriesDropdownOpen(false)}
+                    >
+                      {cat.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <Link to="/combos" className="nav-link">Combos</Link>
             <Link to="/encargos" className="nav-link">Encargos</Link>
             <Link to="/ofertas" className="nav-link">Ofertas</Link>
             <Link to="/como-funciona" className="nav-link">Cómo funciona</Link>
-            <Link
-              to="/membresias"
-              className="nav-link"
-              style={{
-                background: 'linear-gradient(135deg, #c9991a 0%, #d4af37 100%)',
-                color: '#092e5c',
-                fontWeight: 700,
-                padding: '5px 14px',
-                borderRadius: '999px',
-                fontSize: '0.82rem',
-                letterSpacing: '0.03em',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '5px',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              ⚡ Membresía
-            </Link>
           </div>
 
           <div className="flex items-center gap-2" style={{ fontWeight: 500 }}>
@@ -214,22 +260,6 @@ const Navbar = () => {
           <Link to="/encargos" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 nav-link" style={{ fontSize: '1.1rem', color: 'var(--color-text-main)' }}>Encargos</Link>
           <Link to="/ofertas" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 nav-link" style={{ fontSize: '1.1rem', color: 'var(--color-text-main)' }}>Ofertas</Link>
           <Link to="/como-funciona" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 nav-link" style={{ fontSize: '1.1rem', color: 'var(--color-text-main)' }}>Cómo funciona</Link>
-          <Link
-            to="/membresias"
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="flex items-center gap-3"
-            style={{
-              fontSize: '1.1rem',
-              color: '#092e5c',
-              fontWeight: 700,
-              background: 'linear-gradient(135deg, #c9991a 0%, #d4af37 100%)',
-              padding: '10px 16px',
-              borderRadius: '12px',
-              marginTop: '4px',
-            }}
-          >
-            ⚡ Membresía
-          </Link>
         </div>
       </div>
     </header>

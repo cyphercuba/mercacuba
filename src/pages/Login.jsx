@@ -87,33 +87,46 @@ const Login = () => {
   };
 
   return (
-    <div style={{ 
-      display: 'flex', 
-      minHeight: '80vh', 
-      margin: '-var(--spacing-6) -var(--spacing-4) 0',
-      position: 'relative',
-      overflow: 'hidden',
-      borderRadius: 'var(--border-radius)',
-      boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
-    }}>
-      {/* Premium Background Layer */}
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundImage: 'url("/dr_cuba_map.png")', backgroundSize: 'cover', backgroundPosition: 'center', filter: 'blur(2px)', opacity: 0.4, zIndex: 0 }}></div>
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(135deg, rgba(9, 46, 92, 0.85) 0%, rgba(22, 67, 125, 0.95) 100%)', zIndex: 1 }}></div>
+    <div className="auth-portal-wrapper">
+      {/* Cinematic Premium Background Layer */}
+      <div className="auth-portal-bg"></div>
+      <div className="auth-portal-overlay"></div>
 
-      {/* Centered Form */}
-      <div className="auth-container" style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '4rem 2rem', position: 'relative', zIndex: 2 }}>
-        <div className="auth-card" style={{ width: '100%', maxWidth: '450px', backgroundColor: 'rgba(255, 255, 255, 0.98)', backdropFilter: 'blur(10px)', padding: '3rem 2.5rem', borderRadius: '16px', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.1)' }}>
+      {/* Centered Form Area */}
+      <div className="auth-portal-container">
+        <div className="auth-portal-card">
           
-          <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.875rem', color: '#64748b', textDecoration: 'none', marginBottom: '2rem', fontWeight: 500, transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = '#0b2e59'} onMouseLeave={e => e.currentTarget.style.color = '#64748b'}>
-            <ChevronLeft size={16} /> Volver al inicio
+          {/* User Icon Badge */}
+          <div className="auth-portal-badge">
+            <div className="auth-portal-badge-inner">
+              <User size={38} />
+            </div>
+          </div>
+
+          <Link to="/" style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            gap: '6px', 
+            fontSize: '0.85rem', 
+            color: '#64748b', 
+            textDecoration: 'none', 
+            marginBottom: '1.5rem', 
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            letterSpacing: '1px'
+          }}>
+            <ChevronLeft size={16} /> Volver al Inicio
           </Link>
 
-          <h2 className="auth-title" style={{ fontSize: '1.875rem', fontWeight: 800, marginBottom: '0.5rem', color: '#0b2e59' }}>
-            {isLogin ? 'Bienvenido de vuelta' : 'Crea tu cuenta gratis'}
-          </h2>
-          <p className="auth-subtitle" style={{ color: '#64748b', marginBottom: '2rem', fontSize: '0.95rem' }}>
-            {isLogin ? 'Ingresa tus credenciales para administrar tus envíos y compras.' : 'Únete a miles de familias que compran con seguridad.'}
-          </p>
+          <div style={{ textAlign: 'center' }}>
+            <h2 className="auth-portal-title">
+              {isLogin ? 'Bienvenido' : 'Únete Ahora'}
+            </h2>
+            <p className="auth-portal-subtitle">
+              {isLogin ? 'Acceso exclusivo al mercado de lujo.' : 'La mejor experiencia de compra en Cuba.'}
+            </p>
+          </div>
 
           {!isLogin && message.startsWith('Cuenta creada correctamente') ? (
             <div style={{ textAlign: 'center', padding: '2.5rem 1rem' }}>

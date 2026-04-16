@@ -14,7 +14,6 @@ import ComoFunciona from './pages/ComoFunciona';
 import Login from './pages/Login';
 import CompraMayorista from './pages/CompraMayorista';
 import Combos from './pages/Combos';
-import Membresias from './pages/Membresias';
 import MiCuenta from './pages/MiCuenta';
 import AdminDashboard from './pages/Admin/Dashboard';
 import { useAuth } from './context/AuthContext';
@@ -27,15 +26,16 @@ function AppLayout() {
   const { user } = useAuth();
   const isAdminPath = location.pathname.startsWith('/admin');
   const authPaths = ['/cuenta', '/registro'];
-  const hideSidebar = authPaths.includes(location.pathname) || (user && location.pathname === '/mi-cuenta') || isAdminPath;
+  const isAuthPage = authPaths.includes(location.pathname);
+  const hideSidebar = isAuthPage || (user && location.pathname === '/mi-cuenta') || isAdminPath;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <LocationModal />
       <WhatsAppFloating />
-      <Navbar />
-      <div className="container main-layout" style={{ flex: 1 }}>
-        <main className="main-content">
+      {!isAuthPage && <Navbar />}
+      <div className={isAuthPage ? "" : "container main-layout"} style={{ flex: 1, display: isAuthPage ? 'block' : 'flex' }}>
+        <main className={isAuthPage ? "" : "main-content"}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/catalogo" element={<Catalog />} />
@@ -48,16 +48,15 @@ function AppLayout() {
             <Route path="/registro" element={<Login />} />
             <Route path="/mayorista-mipymes" element={<CompraMayorista />} />
             <Route path="/combos" element={<Combos />} />
-             <Route path="/membresias" element={<Membresias />} />
             <Route path="/mi-cuenta" element={<MiCuenta />} />
             <Route path="/admin" element={user?.role === 'admin' ? <AdminDashboard /> : <Navigate to="/cuenta" />} />
             <Route path="*" element={<div style={{ padding: 'var(--spacing-8) 0', minHeight: '60vh' }}><h1>Página en construcción</h1></div>} />
           </Routes>
         </main>
-        {!hideSidebar && <Sidebar />}
+        {!hideSidebar && !isAuthPage && <Sidebar />}
       </div>
-      <Footer />
-      <BottomNav />
+      {!isAuthPage && <Footer />}
+      {!isAuthPage && <BottomNav />}
     </div>
   );
 }
