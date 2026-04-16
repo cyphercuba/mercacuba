@@ -384,8 +384,6 @@ const AuthenticatedHome = () => {
             ))}
           </div>
         )}
-
-        </div>
       </main>
     </div>
   );
