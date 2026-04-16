@@ -829,17 +829,47 @@ img {
 }
 
 /* Shop Layout Mobile Enhancements */
-@media (max-width: 768px) {
-  .home-market-layout {
+@media (max-width: 1024px) {
+  .authenticated-home-grid {
     grid-template-columns: 1fr !important;
     gap: 1.5rem !important;
   }
 
-  .home-categories-sidebar {
+  .home-sidebar-sticky {
     position: static !important;
-    display: none !important;
+    margin-bottom: 1rem;
   }
+}
 
+.authenticated-home-grid {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.home-sidebar-sticky {
+  position: sticky;
+  top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.product-grid-compact {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .product-grid-compact {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 768px) {
   .home-categories-mobile-nav {
     display: flex;
     overflow-x: auto;

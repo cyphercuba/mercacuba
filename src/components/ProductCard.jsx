@@ -80,7 +80,7 @@ const ProductCard = ({ product }) => {
         display: 'flex', 
         alignItems: 'center', 
         justifyContent: 'center',
-        padding: '1rem',
+        padding: '0.75rem',
         overflow: 'hidden'
       }}>
         <img 
@@ -90,40 +90,40 @@ const ProductCard = ({ product }) => {
         />
       </div>
 
-      <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-        <span style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 600, marginBottom: '0.25rem' }}>
+      <div style={{ padding: '0.85rem', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+        <span style={{ fontSize: '0.65rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 600, marginBottom: '0.2rem' }}>
           {product.category_name}
         </span>
-        <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.5rem', lineHeight: '1.4', minHeight: '2.8rem' }}>
+        <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.4rem', lineHeight: '1.3', minHeight: '2.4rem' }}>
           {product.name}
         </h3>
         
         <div style={{ marginTop: 'auto' }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', marginBottom: '1rem' }}>
-            <span style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0b2e59' }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem', marginBottom: '0.8rem' }}>
+            <span style={{ fontSize: '1rem', fontWeight: 800, color: '#0b2e59' }}>
               US${displayPrice.toFixed(2)}
             </span>
             {hasDiscount && (
-              <span style={{ fontSize: '0.85rem', color: '#94a3b8', textDecoration: 'line-through' }}>
+              <span style={{ fontSize: '0.75rem', color: '#94a3b8', textDecoration: 'line-through' }}>
                 US${product.price.toFixed(2)}
               </span>
             )}
           </div>
 
           {quantity > 0 ? (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#f1f5f9', borderRadius: '12px', padding: '0.35rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#f1f5f9', borderRadius: '10px', padding: '0.3rem' }}>
               <button 
                 onClick={handleDecrement}
-                style={{ background: 'white', border: 'none', borderRadius: '8px', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#0b2e59', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}
+                style={{ background: 'white', border: 'none', borderRadius: '6px', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#0b2e59', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}
               >
-                <Minus size={16} />
+                <Minus size={14} />
               </button>
-              <span style={{ fontWeight: 700, color: '#0f172a' }}>{quantity}</span>
+              <span style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.85rem' }}>{quantity}</span>
               <button 
                 onClick={handleIncrement}
-                style={{ background: '#0b2e59', border: 'none', borderRadius: '8px', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
+                style={{ background: '#0b2e59', border: 'none', borderRadius: '6px', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
               >
-                <Plus size={16} />
+                <Plus size={14} />
               </button>
             </div>
           ) : (
@@ -135,19 +135,19 @@ const ProductCard = ({ product }) => {
                 backgroundColor: '#0b2e59', 
                 color: 'white', 
                 border: 'none', 
-                borderRadius: '12px', 
-                padding: '0.75rem', 
+                borderRadius: '10px', 
+                padding: '0.6rem', 
                 fontWeight: 700, 
-                fontSize: '0.85rem',
+                fontSize: '0.8rem',
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'center', 
-                gap: '0.5rem',
+                gap: '0.4rem',
                 cursor: 'pointer',
                 transition: 'background-color 0.2s'
               }}
             >
-              <ShoppingCart size={18} />
+              <ShoppingCart size={16} />
               Añadir
             </button>
           )}
