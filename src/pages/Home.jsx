@@ -385,26 +385,6 @@ const AuthenticatedHome = () => {
           </div>
         )}
 
-        {/* Info Banners - Subtle Footer Style inside Home */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4" style={{ marginTop: '3rem' }}>
-          <div style={{ backgroundColor: '#0b2e59', color: 'white', padding: '1.25rem', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '1rem', boxShadow: '0 8px 20px -8px rgba(11,46,89,0.3)' }}>
-            <div style={{ backgroundColor: 'rgba(255,255,255,0.1)', padding: '0.6rem', borderRadius: '12px' }}>
-              <Truck size={20} color="var(--color-accent)" />
-            </div>
-            <div>
-              <h4 style={{ fontWeight: 700, fontSize: '0.85rem', marginBottom: '2px' }}>Entregas desde 7 días</h4>
-              <p style={{ fontSize: '0.75rem', opacity: 0.8 }}>Cobertura nacional en toda Cuba</p>
-            </div>
-          </div>
-          <div style={{ backgroundColor: '#10b981', color: 'white', padding: '1.25rem', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '1rem', boxShadow: '0 8px 20px -8px rgba(16,185,129,0.3)' }}>
-            <div style={{ backgroundColor: 'rgba(255,255,255,0.1)', padding: '0.6rem', borderRadius: '12px' }}>
-              <MessageCircle size={20} color="white" />
-            </div>
-            <div>
-              <h4 style={{ fontWeight: 700, fontSize: '0.85rem', marginBottom: '2px' }}>Asistencia Directa</h4>
-              <p style={{ fontSize: '0.75rem', opacity: 0.9 }}>Soporte por WhatsApp 24/7</p>
-            </div>
-          </div>
         </div>
       </main>
     </div>
