@@ -7,14 +7,14 @@ import ProductCard from '../components/ProductCard';
 
 // Secondary condensed list for public home hero
 const publicCatalogCats = [
-  { id: 'despensa', slug: 'despensa', name: '🥫 Despensa', image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=200&h=200&q=80' },
-  { id: 'huevos-lacteos', slug: 'huevos-lacteos', name: '🥚 Lácteos', image: 'https://images.unsplash.com/photo-1550583726-277029b7df99?auto=format&fit=crop&w=200&h=200&q=80' },
-  { id: 'carnicos', slug: 'carnicos', name: '🥩 Cárnicos', image: 'https://images.unsplash.com/photo-1607623198453-74e430d4be2a?auto=format&fit=crop&w=200&h=200&q=80' },
-  { id: 'bebidas', slug: 'bebidas', name: '🥤 Bebidas', image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=200&h=200&q=80' },
-  { id: 'electrodomesticos', slug: 'electrodomesticos', name: '🔌 Electro', image: 'https://images.unsplash.com/photo-1626806787426-5910811b6325?auto=format&fit=crop&w=200&h=200&q=80' },
-  { id: 'agro', slug: 'agro', name: '🌾 Agro', image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=200&h=200&q=80' },
-  { id: 'limpieza-utiles', slug: 'limpieza-utiles', name: '🧼 Limpieza', image: '/hygiene_combo.png' },
-  { id: 'otros', slug: 'otros', name: 'Más', image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=200&h=200&q=80' },
+  { id: 'despensa', slug: 'despensa', name: '🥫 Despensa', image: '/logo.png' },
+  { id: 'huevos-lacteos', slug: 'huevos-lacteos', name: '🥚 Lácteos', image: '/logo.png' },
+  { id: 'carnicos', slug: 'carnicos', name: '🥩 Cárnicos', image: '/logo.png' },
+  { id: 'bebidas', slug: 'bebidas', name: '🥤 Bebidas', image: '/logo.png' },
+  { id: 'electrodomesticos', slug: 'electrodomesticos', name: '🔌 Electro', image: '/logo.png' },
+  { id: 'agro', slug: 'agro', name: '🌾 Agro', image: '/logo.png' },
+  { id: 'limpieza-utiles', slug: 'limpieza-utiles', name: '🧼 Limpieza', image: '/logo.png' },
+  { id: 'otros', slug: 'otros', name: 'Más', image: '/logo.png' },
 ];
 
 const fullHierarchyFallback = [
@@ -262,10 +262,8 @@ const AuthenticatedHome = () => {
   };
 
   const fallbackProducts = [
-    { id: 'f1', name: 'Combo Familiar Premium', price: 85.00, image_url: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&h=300', category_name: '🥫 Despensa' },
-    { id: 'f2', name: 'Caja de Pollo 40lb', price: 45.00, image_url: 'https://images.unsplash.com/photo-1606787366850-de6330128bfc?auto=format&fit=crop&w=400&h=300', category_name: '🥩 Cárnicos' },
-    { id: 'f3', name: 'Split 1 Tonelada Royal', price: 350.00, image_url: 'https://images.unsplash.com/photo-1626806787426-5910811b6325?auto=format&fit=crop&w=400&h=300', category_name: '🔌 Electro' },
-    { id: 'f4', name: 'Aceite Vegetal 5L', price: 18.50, image_url: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=400&h=300', category_name: '🥫 Despensa' }
+    { id: 'f1', name: 'Producto en Espera', price: 0.00, image_url: null, category_name: 'Catálogo' },
+    { id: 'f2', name: 'Novedad Próximamente', price: 0.00, image_url: null, category_name: 'Catálogo' },
   ];
 
   const displayProducts = (products?.length > 0) ? products : fallbackProducts;
@@ -291,21 +289,30 @@ const AuthenticatedHome = () => {
               const isActive = activeCategory?.id === cat.id;
               return (
                 <div key={cat.id} style={{ borderBottom: '1px solid #f8fafc' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', backgroundColor: isActive ? '#f8fafc' : 'transparent' }}>
-                    <button 
-                      type="button" 
-                      onClick={() => handleCategoryClick(cat)}
-                      style={{ flexGrow: 1, padding: '0.75rem 0.5rem 0.75rem 1.1rem', color: isActive ? '#0b2e59' : '#1e293b', background: 'none', border: 'none', fontSize: '0.85rem', cursor: 'pointer', textAlign: 'left', fontWeight: isActive ? 700 : 600, display: 'flex', alignItems: 'center', gap: '8px' }}
+                  <div 
+                    onClick={() => {
+                      handleCategoryClick(cat);
+                      if (cat.subcategories?.length > 0) toggleCategory(cat.id);
+                    }}
+                    style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      backgroundColor: isActive ? '#f8fafc' : 'transparent',
+                      cursor: 'pointer',
+                      transition: 'background-color 0.2s'
+                    }}
+                  >
+                    <div 
+                      style={{ flexGrow: 1, padding: '0.75rem 0.5rem 0.75rem 1.1rem', color: isActive ? '#0b2e59' : '#1e293b', fontSize: '0.85rem', fontWeight: isActive ? 700 : 600, display: 'flex', alignItems: 'center', gap: '8px' }}
                     >
                       {cat.name}
-                    </button>
+                    </div>
                     {cat.subcategories?.length > 0 && (
-                      <button 
-                        onClick={(e) => { e.stopPropagation(); toggleCategory(cat.id); }}
-                        style={{ padding: '0.75rem', background: 'none', border: 'none', cursor: 'pointer' }}
+                      <div 
+                        style={{ padding: '0.75rem', display: 'flex', alignItems: 'center' }}
                       >
                         {isOpen ? <ChevronDown size={14} color="#94a3b8" /> : <ChevronRight size={14} color="#94a3b8" />}
-                      </button>
+                      </div>
                     )}
                   </div>
                   {isOpen && cat.subcategories?.length > 0 && (

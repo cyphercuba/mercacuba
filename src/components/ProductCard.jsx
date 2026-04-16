@@ -84,9 +84,9 @@ const ProductCard = ({ product }) => {
         overflow: 'hidden'
       }}>
         <img 
-          src={product.image_url || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=300&h=300&q=80'} 
+          src={product.image_url || '/logo.png'} 
           alt={product.name} 
-          style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+          style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', opacity: product.image_url ? 1 : 0.2 }}
         />
       </div>
 
